@@ -94,30 +94,89 @@
 
   <!-- 第二栏：排名 -->
   <view class="tab-content" wx:if="{{activeTab === 1 && match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished')}}">
-    <view class="card">
-      <view class="section-title">排名</view>
-      <view class="rankings-table" wx:if="{{rankings.length > 0}}">
-        <view class="rank-header">
-          <text class="col-rank">排名</text>
-          <text class="col-player">选手</text>
-          <text class="col-wl">胜-负</text>
-          <text class="col-pts">积分</text>
-          <text class="col-net">净胜分</text>
-        </view>
-        <view class="rank-row" wx:for="{{rankings}}" wx:key="_id">
-          <text class="col-rank">{{index + 1}}</text>
-          <view class="col-player">
-            <image class="avatar-sm" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
-            <view class="avatar-sm avatar-placeholder" wx:else></view>
-            <text>{{item.nickName || '未知'}}</text>
+    <block wx:if="{{match.subMode === 'team-turn' && teamRankings && teamRankings.length > 0}}">
+      <view class="card ranking-card">
+        <view class="section-title">队伍排名</view>
+        <view class="team-rank-table">
+          <view class="team-rank-header">
+            <text class="team-col-rank">排名</text>
+            <text class="team-col-name">队伍</text>
+            <text class="team-col-wl">胜-负</text>
+            <text class="team-col-pts">积分</text>
+            <text class="team-col-net">净胜分</text>
           </view>
-          <text class="col-wl">{{item.wins}}-{{item.losses}}</text>
-          <text class="col-pts">{{item.points}}</text>
-          <text class="col-net {{item.net >= 0 ? 'net-positive' : 'net-negative'}}">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
+          <view class="team-rank-row" wx:for="{{teamRankings || []}}" wx:key="teamIndex">
+            <view class="team-col-rank">
+              <text class="medal medal-1" wx:if="{{item.rank === 1}}">🥇</text>
+              <text class="medal medal-2" wx:elif="{{item.rank === 2}}">🥈</text>
+              <text class="medal medal-3" wx:elif="{{item.rank === 3}}">🥉</text>
+              <text wx:else>{{item.rank}}</text>
+            </view>
+            <text class="team-col-name">{{item.teamLabel}}</text>
+            <text class="team-col-wl">{{item.wins}}-{{item.losses}}</text>
+            <text class="team-col-pts">{{item.points}}</text>
+            <text class="team-col-net {{item.net >= 0 ? 'net-positive' : 'net-negative'}}">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
+          </view>
         </view>
       </view>
-      <view class="empty-tip" wx:else>暂无排名数据</view>
-    </view>
+      <view class="card player-rank-by-team" wx:for="{{teamPlayerRankings || []}}" wx:key="teamIndex">
+        <view class="section-title sub">{{item.teamLabel}} - 队员排行榜</view>
+        <view class="rankings-table" wx:if="{{item.players && item.players.length > 0}}">
+          <view class="rank-header">
+            <text class="col-rank">排名</text>
+            <text class="col-player">选手</text>
+            <text class="col-wl">胜-负</text>
+            <text class="col-pts">积分</text>
+            <text class="col-net">净胜分</text>
+          </view>
+          <view class="rank-row" wx:for="{{item.players}}" wx:for-item="p" wx:key="_id">
+            <view class="col-rank">
+              <text class="medal medal-1" wx:if="{{p.rankInTeam === 1}}">🥇</text>
+              <text class="medal medal-2" wx:elif="{{p.rankInTeam === 2}}">🥈</text>
+              <text class="medal medal-3" wx:elif="{{p.rankInTeam === 3}}">🥉</text>
+              <text wx:else>{{p.rankInTeam}}</text>
+            </view>
+            <view class="col-player">
+              <view class="avatar-wrap">
+                <image class="avatar-sm" src="{{p.avatarUrl}}" mode="aspectFill" wx:if="{{p.avatarUrl}}"></image>
+                <view class="avatar-sm avatar-placeholder" wx:else></view>
+                <text class="me-tag" wx:if="{{p.isMe}}">我</text>
+              </view>
+              <text>{{p.nickName || '未知'}}</text>
+            </view>
+            <text class="col-wl">{{p.wins}}-{{p.losses}}</text>
+            <text class="col-pts">{{p.points}}</text>
+            <text class="col-net {{p.net >= 0 ? 'net-positive' : 'net-negative'}}">{{p.net >= 0 ? '+' : ''}}{{p.net}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="card">
+        <view class="section-title">排名</view>
+        <view class="rankings-table" wx:if="{{rankings.length > 0}}">
+          <view class="rank-header">
+            <text class="col-rank">排名</text>
+            <text class="col-player">选手</text>
+            <text class="col-wl">胜-负</text>
+            <text class="col-pts">积分</text>
+            <text class="col-net">净胜分</text>
+          </view>
+          <view class="rank-row" wx:for="{{rankings}}" wx:key="_id">
+            <text class="col-rank">{{index + 1}}</text>
+            <view class="col-player">
+              <image class="avatar-sm" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
+              <view class="avatar-sm avatar-placeholder" wx:else></view>
+              <text>{{item.nickName || '未知'}}</text>
+            </view>
+            <text class="col-wl">{{item.wins}}-{{item.losses}}</text>
+            <text class="col-pts">{{item.points}}</text>
+            <text class="col-net {{item.net >= 0 ? 'net-positive' : 'net-negative'}}">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
+          </view>
+        </view>
+        <view class="empty-tip" wx:else>暂无排名数据</view>
+      </view>
+    </block>
   </view>
 
   <!-- 第三栏：对局 -->

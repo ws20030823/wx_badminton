@@ -13,10 +13,13 @@ Page({
     userMap: {},
     activeTab: 0,
     rankings: [],
+    teamRankings: [],
+    teamPlayerRankings: [],
     matchups: []
   },
 
   onLoad(options) {
+    this.setData({ teamRankings: [], teamPlayerRankings: [] });
     const matchId = options.id;
     if (matchId) {
       this.setData({ matchId });
@@ -41,7 +44,7 @@ Page({
       const result = res.result;
 
       if (result && result.success) {
-        const { match, isCreator, hasJoined, playerList, teamList, myTeamIndex, userMap, rankings, matchups } = result;
+        const { match, isCreator, hasJoined, playerList, teamList, myTeamIndex, userMap, rankings, teamRankings, teamPlayerRankings, matchups } = result;
         this.setData({
           match,
           isCreator,
@@ -51,6 +54,8 @@ Page({
           myTeamIndex: myTeamIndex != null ? myTeamIndex : -1,
           userMap: userMap || {},
           rankings,
+          teamRankings: teamRankings || [],
+          teamPlayerRankings: teamPlayerRankings || [],
           matchups
         });
       } else {

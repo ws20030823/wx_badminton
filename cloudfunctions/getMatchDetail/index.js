@@ -78,6 +78,8 @@ exports.main = async (event, context) => {
 
     const rankings = [];
     const matchups = [];
+    let teamRankings = [];
+    let teamPlayerRankings = [];
     const results = match.results || {};
     const wins = {};
     const losses = {};
@@ -117,6 +119,53 @@ exports.main = async (event, context) => {
         if (b.points !== a.points) return b.points - a.points;
         return b.net - a.net;
       });
+
+      if (match.subMode === 'team-turn' && teamList && teamList.length > 0) {
+        teamRankings = teamList.map(t => {
+          const pids = t.playerIds || [];
+          const teamWins = pids.reduce((s, pid) => s + (wins[pid] || 0), 0);
+          const teamLosses = pids.reduce((s, pid) => s + (losses[pid] || 0), 0);
+          const teamPoints = pids.reduce((s, pid) => {
+            const w = wins[pid] || 0, l = losses[pid] || 0;
+            return s + (w * 2 + l * 1);
+          }, 0);
+          const teamNet = pids.reduce((s, pid) => s + (netPoints[pid] || 0), 0);
+          return { teamIndex: t.teamIndex, teamLabel: t.teamLabel, wins: teamWins, losses: teamLosses, points: teamPoints, net: teamNet };
+        });
+        teamRankings.sort((a, b) => {
+          if (b.points !== a.points) return b.points - a.points;
+          return b.net - a.net;
+        });
+        teamRankings.forEach((tr, i) => { tr.rank = i + 1; });
+
+        const rankByPid = {};
+        rankings.forEach(r => { rankByPid[r._id] = r; });
+        teamPlayerRankings = teamList.map(t => {
+          const pids = t.playerIds || [];
+          const players = pids
+            .map(pid => {
+              const r = rankByPid[pid];
+              if (!r) return null;
+              return {
+                _id: r._id,
+                nickName: r.nickName || '未知',
+                avatarUrl: r.avatarUrl || '',
+                wins: r.wins,
+                losses: r.losses,
+                points: r.points,
+                net: r.net,
+                isMe: userId ? r._id === userId : false
+              };
+            })
+            .filter(Boolean);
+          players.sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            return b.net - a.net;
+          });
+          players.forEach((p, i) => { p.rankInTeam = i + 1; });
+          return { teamIndex: t.teamIndex, teamLabel: t.teamLabel, players };
+        });
+      }
 
       const teams = match.teams || {};
       const isDoublesMatch = match.type === 'doubles';
@@ -213,6 +262,8 @@ exports.main = async (event, context) => {
       teamList,
       myTeamIndex,
       rankings,
+      teamRankings,
+      teamPlayerRankings,
       matchups
     };
   } catch (err) {

@@ -276,6 +276,99 @@
   flex-shrink: 0;
 }
 
+/* 小队转：队伍排名 + 队员排行榜 */
+.ranking-card {
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.team-rank-table {
+  font-size: 26rpx;
+}
+
+.team-rank-header {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2rpx solid #eee;
+}
+
+.team-rank-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.team-rank-row:last-child {
+  border-bottom: none;
+}
+
+.team-col-rank {
+  width: 72rpx;
+  text-align: center;
+  font-size: 26rpx;
+}
+
+.team-col-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.team-col-wl, .team-col-pts {
+  width: 96rpx;
+  text-align: center;
+}
+
+.team-col-net {
+  width: 100rpx;
+  text-align: center;
+}
+
+.medal {
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.medal-1, .medal-2, .medal-3 {
+  display: inline-block;
+}
+
+.player-rank-by-team {
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.section-title.sub {
+  font-size: 28rpx;
+  color: #555;
+  margin-bottom: 20rpx;
+}
+
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.me-tag {
+  position: absolute;
+  top: -6rpx;
+  left: -6rpx;
+  font-size: 18rpx;
+  padding: 2rpx 8rpx;
+  background: #1565c0;
+  color: #fff;
+  border-radius: 8rpx;
+  line-height: 1.2;
+}
+
 /* 对局卡片 */
 .matchups-list {
   display: flex;
