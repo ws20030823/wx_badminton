@@ -43,6 +43,7 @@
           bindinput="onMaxPlayersInput"
         />
       </view>
+      <text class="form-hint" wx:if="{{subMode === 'team-turn' && maxPlayersPerTeamHint}}">总人数建议为队伍数的倍数，每队最多 {{maxPlayersPerTeamHint}} 人</text>
     </view>
 
     <block wx:if="{{subMode === 'team-turn'}}">

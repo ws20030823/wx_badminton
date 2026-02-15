@@ -107,6 +107,13 @@
   color: #999;
 }
 
+.form-hint {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #888;
+}
+
 /* 队伍数量与队伍名称 */
 .team-count-picker {
   display: flex;

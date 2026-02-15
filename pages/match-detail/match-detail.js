@@ -15,7 +15,8 @@ Page({
     rankings: [],
     teamRankings: [],
     teamPlayerRankings: [],
-    matchups: []
+    matchups: [],
+    canStartTeamTurn: false
   },
 
   onLoad(options) {
@@ -45,6 +46,13 @@ Page({
 
       if (result && result.success) {
         const { match, isCreator, hasJoined, playerList, teamList, myTeamIndex, userMap, rankings, teamRankings, teamPlayerRankings, matchups } = result;
+        let canStartTeamTurn = false;
+        if (match && match.subMode === 'team-turn' && teamList && teamList.length > 0) {
+          const sizes = teamList.map(t => (t.players || t.playerIds || []).length);
+          const first = sizes[0];
+          const sameSize = sizes.every(s => s === first) && first > 0;
+          canStartTeamTurn = sameSize;
+        }
         this.setData({
           match,
           isCreator,
@@ -56,7 +64,8 @@ Page({
           rankings,
           teamRankings: teamRankings || [],
           teamPlayerRankings: teamPlayerRankings || [],
-          matchups
+          matchups,
+          canStartTeamTurn
         });
       } else {
         wx.showToast({ title: result?.message || '比赛不存在', icon: 'none' });
@@ -80,7 +89,12 @@ Page({
     const isTeamTurn = match && match.subMode === 'team-turn' && teamList && teamList.length > 0;
 
     if (isTeamTurn) {
-      const itemList = teamList.map(t => `${t.teamLabel} (${(t.players || []).length}人)`);
+      const maxPerTeam = match.maxPlayersPerTeam != null ? match.maxPlayersPerTeam : Math.max(1, Math.floor((match.maxPlayers || 8) / (match.teamCount || 2)));
+      const itemList = teamList.map(t => {
+        const n = (t.players || t.playerIds || []).length;
+        const full = n >= maxPerTeam;
+        return `${t.teamLabel} (${n}人)${full ? ' (已满)' : ''}`;
+      });
       wx.showActionSheet({
         itemList,
         success: (res) => {
@@ -163,7 +177,12 @@ Page({
     const isTeamTurn = match && match.subMode === 'team-turn' && teamList && teamList.length > 0;
 
     if (isTeamTurn) {
-      const itemList = teamList.map(t => `${t.teamLabel} (${(t.players || []).length}人)`);
+      const maxPerTeam = match.maxPlayersPerTeam != null ? match.maxPlayersPerTeam : Math.max(1, Math.floor((match.maxPlayers || 8) / (match.teamCount || 2)));
+      const itemList = teamList.map(t => {
+        const n = (t.players || t.playerIds || []).length;
+        const full = n >= maxPerTeam;
+        return `${t.teamLabel} (${n}人)${full ? ' (已满)' : ''}`;
+      });
       wx.showActionSheet({
         itemList,
         success: (res) => {

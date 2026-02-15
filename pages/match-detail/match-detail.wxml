@@ -39,7 +39,8 @@
           >
             <view class="team-card-header">
               <text class="team-label">{{item.teamLabel}}</text>
-              <text class="team-count">({{item.players ? item.players.length : 0}}人)</text>
+              <text class="team-count">({{item.players ? item.players.length : (item.playerIds ? item.playerIds.length : 0)}}人)</text>
+              <text class="team-full-tag" wx:if="{{match.maxPlayersPerTeam != null && (item.players ? item.players.length : (item.playerIds ? item.playerIds.length : 0)) >= match.maxPlayersPerTeam}}">已满</text>
               <text class="my-team-tag" wx:if="{{myTeamIndex === item.teamIndex}}">我的队伍</text>
             </view>
             <view class="team-players" wx:if="{{item.players && item.players.length > 0}}">
@@ -85,10 +86,11 @@
       >添加机器人（测试）</button>
 
       <button
-        wx:if="{{isCreator && match.status === 'registering' && match.players && match.players.length >= match.minPlayers}}"
+        wx:if="{{isCreator && match.status === 'registering' && match.players && match.players.length >= match.minPlayers && (!(match.subMode === 'team-turn') || canStartTeamTurn)}}"
         class="btn-primary"
         bindtap="onStartTeamTap"
       >开始组队</button>
+      <view wx:if="{{isCreator && match.status === 'registering' && match.subMode === 'team-turn' && match.players && match.players.length >= match.minPlayers && !canStartTeamTurn}}" class="start-team-hint">各队人数一致后才能开始组队</view>
     </view>
   </view>
 

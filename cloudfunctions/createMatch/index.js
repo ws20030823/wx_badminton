@@ -80,6 +80,8 @@ exports.main = async (event, context) => {
 
     if (subMode === 'team-turn') {
       const tc = Math.min(4, Math.max(2, parseInt(teamCount, 10) || 2));
+      const maxP = matchData.maxPlayers || 8;
+      matchData.maxPlayersPerTeam = Math.max(1, Math.floor(maxP / tc));
       const defaults = ['队伍A', '队伍B', '队伍C', '队伍D'].slice(0, tc);
       const names = Array.isArray(teamNames) && teamNames.length >= tc
         ? teamNames.slice(0, tc).map(s => (s && String(s).trim()) || '').map((s, i) => s || defaults[i])

@@ -12,6 +12,7 @@ Page({
     maxPlayers: 8,
     teamCount: 2,
     teamNames: ['', ''],
+    maxPlayersPerTeamHint: 4,
     startDate: '',
     startTimeOnly: '',
     endDate: '',
@@ -30,12 +31,14 @@ Page({
       'knockout': '晋级赛'
     };
     const teamNames = subMode === 'team-turn' ? ['', ''] : [];
+    const maxPlayersPerTeamHint = subMode === 'team-turn' ? 4 : 0;
     this.setData({
       type,
       subMode,
       typeText,
       subModeText: subModeMap[subMode] || subMode,
-      teamNames
+      teamNames,
+      maxPlayersPerTeamHint
     });
   },
 
@@ -47,7 +50,15 @@ Page({
     } else {
       teamNames = teamNames.slice(0, teamCount);
     }
-    this.setData({ teamCount, teamNames });
+    const maxPlayers = this.data.maxPlayers || 8;
+    const maxPlayersPerTeamHint = Math.max(1, Math.floor(maxPlayers / teamCount));
+    this.setData({ teamCount, teamNames, maxPlayersPerTeamHint });
+  },
+
+  updateMaxPlayersPerTeamHint() {
+    if (this.data.subMode !== 'team-turn') return;
+    const { maxPlayers = 8, teamCount = 2 } = this.data;
+    this.setData({ maxPlayersPerTeamHint: Math.max(1, Math.floor(maxPlayers / teamCount)) });
   },
 
   onTeamNameInput(e) {
@@ -67,7 +78,8 @@ Page({
   },
 
   onMaxPlayersInput(e) {
-    this.setData({ maxPlayers: parseInt(e.detail.value) || 8 });
+    const maxPlayers = parseInt(e.detail.value) || 8;
+    this.setData({ maxPlayers }, () => this.updateMaxPlayersPerTeamHint());
   },
 
   onStartDateChange(e) {

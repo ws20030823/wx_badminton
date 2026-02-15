@@ -31,8 +31,14 @@ exports.main = async (event, context) => {
     }
 
     const players = match.players || [];
-    const toAdd = Math.min(count, match.maxPlayers - players.length);
-    if (toAdd <= 0) return { success: false, message: '人数已满' };
+    let toAdd = Math.min(count, match.maxPlayers - players.length);
+    if (isTeamTurn) {
+      const tc = match.teamCount || match.teamPlayers.length;
+      const maxPerTeam = match.maxPlayersPerTeam != null ? match.maxPlayersPerTeam : Math.max(1, Math.floor((match.maxPlayers || 8) / tc));
+      const currentTeamSize = (match.teamPlayers[teamIndex] || []).length;
+      toAdd = Math.min(toAdd, Math.max(0, maxPerTeam - currentTeamSize));
+    }
+    if (toAdd <= 0) return { success: false, message: '人数已满或该队人数已满' };
 
     const newPlayerIds = [];
     for (let i = 0; i < toAdd; i++) {

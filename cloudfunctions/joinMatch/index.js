@@ -57,6 +57,13 @@ exports.main = async (event, context) => {
       if (isNaN(ti) || ti < 0 || ti >= tc) {
         return { success: false, message: '请选择队伍' };
       }
+      const maxPerTeam = match.maxPlayersPerTeam != null
+        ? match.maxPlayersPerTeam
+        : Math.max(1, Math.floor((match.maxPlayers || 8) / tc));
+      const currentTeamSize = (match.teamPlayers[ti] || []).length;
+      if (currentTeamSize >= maxPerTeam) {
+        return { success: false, message: '该队人数已满，请选择其他队伍' };
+      }
       const teamPlayers = match.teamPlayers.map(arr => [...(arr || [])]);
       teamPlayers[ti].push(userId);
       const newPlayers = teamPlayers.flat();
