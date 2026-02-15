@@ -1,0 +1,50 @@
+<!--pages/match-detail/match-detail.wxml - 比賽詳情-->
+<view class="container" wx:if="{{match}}">
+  <view class="card match-info">
+    <view class="match-name">{{match.name}}</view>
+    <view class="match-meta">
+      <text class="status-tag status-{{match.status}}">{{match.status === 'registering' ? '報名中' : match.status === 'teaming' ? '組隊中' : match.status === 'playing' ? '進行中' : '已結束'}}</text>
+      <text class="mode-tag">{{match.type === 'singles' ? '單打' : '雙打'}} - {{match.subMode === 'single-turn' ? '單打轉' : match.subMode === 'team-turn' ? '小隊轉' : '晉級賽'}}</text>
+    </view>
+    <view class="match-stats">
+      <text>報名人數：{{match.players ? match.players.length : 0}} / {{match.maxPlayers}}</text>
+    </view>
+    <view class="match-extras" wx:if="{{match.location || match.time}}">
+      <text wx:if="{{match.time}}">時間：{{match.time}}</text>
+      <text wx:if="{{match.location}}">地點：{{match.location}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">報名列表</view>
+    <view class="player-list" wx:if="{{playerList.length > 0}}">
+      <view class="player-item" wx:for="{{playerList}}" wx:key="_id">
+        <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
+        <view class="avatar avatar-placeholder" wx:else></view>
+        <text>{{item.nickName || '未知'}}</text>
+      </view>
+    </view>
+    <view class="empty-tip" wx:else>暫無報名</view>
+  </view>
+
+  <view class="actions">
+    <button
+      wx:if="{{!hasJoined && match.status === 'registering'}}"
+      class="btn-primary"
+      bindtap="onJoinTap"
+    >立即報名</button>
+
+    <button
+      wx:if="{{isCreator && match.status === 'registering' && match.players && match.players.length >= match.minPlayers}}"
+      class="btn-primary"
+      bindtap="onStartTeamTap"
+    >開始組隊</button>
+  </view>
+
+  <view class="card" wx:if="{{match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished')}}">
+    <view class="section-title">組隊結果</view>
+    <view class="teams-display">
+      <text>組隊已完成，詳見雲端資料</text>
+    </view>
+  </view>
+</view>

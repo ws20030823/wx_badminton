@@ -1,0 +1,41 @@
+/* pages/singles-mode/singles-mode.wxss */
+.container {
+  padding: 40rpx;
+}
+
+.page-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 40rpx;
+}
+
+.mode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.mode-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.mode-item:active {
+  opacity: 0.9;
+}
+
+.mode-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.mode-desc {
+  font-size: 26rpx;
+  color: #999;
+}

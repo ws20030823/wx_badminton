@@ -1,0 +1,21 @@
+<!--pages/index/index.wxml - 首頁-->
+<view class="container">
+  <view class="header">
+    <text class="title">羽毛球組隊</text>
+    <text class="subtitle">選擇比賽模式開始約球</text>
+  </view>
+
+  <view class="mode-cards">
+    <view class="mode-card" bindtap="onSinglesTap">
+      <view class="card-icon">🏸</view>
+      <text class="card-title">單打</text>
+      <text class="card-desc">單打轉 / 小隊轉 / 晉級賽</text>
+    </view>
+
+    <view class="mode-card" bindtap="onDoublesTap">
+      <view class="card-icon">👥</view>
+      <text class="card-title">雙打</text>
+      <text class="card-desc">雙打組隊比賽模式</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,39 @@
+<!--pages/profile/profile.wxml - 我的-->
+<view class="container">
+  <view class="card profile-card">
+    <view class="user-section" wx:if="{{userInfo}}">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <text class="nickname">{{userInfo.nickName}}</text>
+    </view>
+    <view class="user-section" wx:else>
+      <view class="avatar placeholder"></view>
+      <button class="login-btn" bindtap="onLoginTap">微信登入</button>
+    </view>
+  </view>
+
+  <view class="card stats-card">
+    <view class="section-title">數據統計</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{stats.totalMatches}}</text>
+        <text class="stat-label">參與比賽</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.createdMatches}}</text>
+        <text class="stat-label">創建比賽</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.wins}}</text>
+        <text class="stat-label">勝場</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.losses}}</text>
+        <text class="stat-label">負場</text>
+      </view>
+      <view class="stat-item full">
+        <text class="stat-value">{{stats.winRate}}%</text>
+        <text class="stat-label">勝率</text>
+      </view>
+    </view>
+  </view>
+</view>

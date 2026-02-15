@@ -1,0 +1,3 @@
+# TabBar 圖示
+# 執行 node scripts/create-placeholder-icons.js 可建立佔位圖
+# 或手動新增：home.png, home-active.png, matches.png, matches-active.png, profile.png, profile-active.png（建議 81x81px）

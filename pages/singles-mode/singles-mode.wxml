@@ -1,0 +1,21 @@
+<!--pages/singles-mode/singles-mode.wxml - 單打模式選擇-->
+<view class="container">
+  <view class="page-title">選擇單打模式</view>
+
+  <view class="mode-list">
+    <view class="mode-item" bindtap="onSingleTurnTap">
+      <text class="mode-name">單打轉</text>
+      <text class="mode-desc">輪轉對戰，每人場數相同</text>
+    </view>
+
+    <view class="mode-item" bindtap="onTeamTurnTap">
+      <text class="mode-name">小隊轉</text>
+      <text class="mode-desc">分組對戰，組內循環</text>
+    </view>
+
+    <view class="mode-item" bindtap="onKnockoutTap">
+      <text class="mode-name">晉級賽</text>
+      <text class="mode-desc">淘汰賽制，勝者晉級</text>
+    </view>
+  </view>
+</view>

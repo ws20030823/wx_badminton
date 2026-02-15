@@ -1,0 +1,57 @@
+<!--pages/matches/matches.wxml - 我的對戰-->
+<view class="container">
+  <view class="tabs">
+    <view
+      class="tab {{activeTab === 0 ? 'active' : ''}}"
+      data-index="0"
+      bindtap="onTabChange"
+    >我參與的</view>
+    <view
+      class="tab {{activeTab === 1 ? 'active' : ''}}"
+      data-index="1"
+      bindtap="onTabChange"
+    >我創建的</view>
+  </view>
+
+  <scroll-view
+    scroll-y
+    class="list-area"
+    enable-back-to-top
+    refresher-enabled
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    <view wx:if="{{activeTab === 0}}">
+      <view
+        class="card match-card"
+        wx:for="{{joinedList}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onMatchTap"
+      >
+        <view class="match-name">{{item.name}}</view>
+        <view class="match-meta">
+          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '報名中' : item.status === 'teaming' ? '組隊中' : item.status === 'playing' ? '進行中' : '已結束'}}</text>
+          <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
+        </view>
+      </view>
+      <view class="empty-tip" wx:if="{{joinedList.length === 0}}">暫無參與的比賽</view>
+    </view>
+
+    <view wx:if="{{activeTab === 1}}">
+      <view
+        class="card match-card"
+        wx:for="{{createdList}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onMatchTap"
+      >
+        <view class="match-name">{{item.name}}</view>
+        <view class="match-meta">
+          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '報名中' : item.status === 'teaming' ? '組隊中' : item.status === 'playing' ? '進行中' : '已結束'}}</text>
+          <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
+        </view>
+      </view>
+      <view class="empty-tip" wx:if="{{createdList.length === 0}}">暫無創建的比賽</view>
+    </view>
+  </scroll-view>
+</view>

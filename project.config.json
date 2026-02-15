@@ -1,0 +1,15 @@
+{
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "appid": "YOUR_APPID",
+  "projectname": "wx-badminton",
+  "libVersion": "3.5.7",
+  "condition": {}
+}

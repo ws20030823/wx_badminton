@@ -1,0 +1,8 @@
+{
+  "description": "複製此檔案為 project.private.config.json，並填入你的 appid",
+  "appid": "YOUR_APPID",
+  "projectname": "wx-badminton",
+  "setting": {
+    "compileHotReLoad": true
+  }
+}

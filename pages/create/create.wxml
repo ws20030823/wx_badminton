@@ -1,0 +1,61 @@
+<!--pages/create/create.wxml - 創建比賽-->
+<view class="container">
+  <view class="form-card card">
+    <view class="form-item">
+      <text class="label">比賽名稱</text>
+      <input
+        class="input"
+        placeholder="請輸入比賽名稱"
+        value="{{name}}"
+        bindinput="onNameInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">比賽模式</text>
+      <text class="readonly">{{typeText}} - {{subModeText}}</text>
+    </view>
+
+    <view class="form-row">
+      <view class="form-item half">
+        <text class="label">最少人數</text>
+        <input
+          class="input"
+          type="number"
+          placeholder="4"
+          value="{{minPlayers}}"
+          bindinput="onMinPlayersInput"
+        />
+      </view>
+      <view class="form-item half">
+        <text class="label">最多人數</text>
+        <input
+          class="input"
+          type="number"
+          placeholder="8"
+          value="{{maxPlayers}}"
+          bindinput="onMaxPlayersInput"
+        />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">比賽時間（選填）</text>
+      <picker mode="date" value="{{time}}" bindchange="onTimeChange">
+        <view class="picker">{{time || '選擇日期'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">比賽地點（選填）</text>
+      <input
+        class="input"
+        placeholder="請輸入地點"
+        value="{{location}}"
+        bindinput="onLocationInput"
+      />
+    </view>
+
+    <button class="btn-primary submit-btn" bindtap="onSubmit">創建比賽</button>
+  </view>
+</view>

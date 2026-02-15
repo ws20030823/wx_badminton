@@ -1,0 +1,21 @@
+<!--pages/doubles-mode/doubles-mode.wxml - 雙打模式選擇-->
+<view class="container">
+  <view class="page-title">選擇雙打模式</view>
+
+  <view class="mode-list">
+    <view class="mode-item" bindtap="onSingleTurnTap">
+      <text class="mode-name">雙打單打轉</text>
+      <text class="mode-desc">搭檔輪轉對戰</text>
+    </view>
+
+    <view class="mode-item" bindtap="onTeamTurnTap">
+      <text class="mode-name">雙打小隊轉</text>
+      <text class="mode-desc">分組雙打對戰</text>
+    </view>
+
+    <view class="mode-item" bindtap="onKnockoutTap">
+      <text class="mode-name">雙打晉級賽</text>
+      <text class="mode-desc">淘汰賽制雙打</text>
+    </view>
+  </view>
+</view>

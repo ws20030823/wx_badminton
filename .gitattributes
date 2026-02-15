@@ -1,0 +1,2 @@
+* text=auto
+*.{js,json,wxml,wxss,md} text eol=lf
