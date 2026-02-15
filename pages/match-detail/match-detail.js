@@ -7,7 +7,11 @@ Page({
     match: null,
     isCreator: false,
     hasJoined: false,
-    playerList: []
+    playerList: [],
+    userMap: {},
+    activeTab: 0,
+    rankings: [],
+    matchups: []
   },
 
   onLoad(options) {
@@ -28,32 +32,25 @@ Page({
     wx.showLoading({ title: '加载中...' });
 
     try {
-      const db = wx.cloud.database();
-      const res = await db.collection('matches').doc(this.data.matchId).get();
+      const res = await wx.cloud.callFunction({
+        name: 'getMatchDetail',
+        data: { matchId: this.data.matchId }
+      });
+      const result = res.result;
 
-      if (res.data) {
-        const match = res.data;
-        const userId = app.globalData.userId || '';
-        const isCreator = match.creatorId === userId;
-        const hasJoined = match.players && match.players.includes(userId);
-
-        // 获取报名用户信息
-        let playerList = [];
-        if (match.players && match.players.length > 0) {
-          const usersRes = await db.collection('users')
-            .where({ _id: db.command.in(match.players) })
-            .get();
-          playerList = usersRes.data || [];
-        }
-
+      if (result && result.success) {
+        const { match, isCreator, hasJoined, playerList, userMap, rankings, matchups } = result;
         this.setData({
           match,
           isCreator,
           hasJoined,
-          playerList
+          playerList,
+          userMap: userMap || {},
+          rankings,
+          matchups
         });
       } else {
-        wx.showToast({ title: '比赛不存在', icon: 'none' });
+        wx.showToast({ title: result?.message || '比赛不存在', icon: 'none' });
       }
     } catch (err) {
       wx.showToast({ title: '加载失败', icon: 'none' });
@@ -87,6 +84,26 @@ Page({
     }
   },
 
+  async onAddRobotTap() {
+    if (!this.data.isCreator) return;
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'addRobot',
+        data: { matchId: this.data.matchId, count: 1 }
+      });
+      const result = res.result;
+      if (result && result.success) {
+        wx.showToast({ title: `已添加 ${result.added} 个机器人`, icon: 'success' });
+        this.loadMatch();
+      } else {
+        wx.showToast({ title: result?.message || '添加失败', icon: 'none' });
+      }
+    } catch (err) {
+      wx.showToast({ title: '添加失败', icon: 'none' });
+    }
+  },
+
   async onStartTeamTap() {
     if (!this.data.isCreator) return;
 
@@ -110,5 +127,10 @@ Page({
   getStatusText(status) {
     const map = { registering: '报名中', teaming: '组队中', playing: '进行中', finished: '已结束' };
     return map[status] || status;
+  },
+
+  onTabChange(e) {
+    const index = parseInt(e.currentTarget.dataset.index, 10);
+    this.setData({ activeTab: index });
   }
 });

@@ -15,36 +15,114 @@
     </view>
   </view>
 
-  <view class="card">
-    <view class="section-title">报名列表</view>
-    <view class="player-list" wx:if="{{playerList.length > 0}}">
-      <view class="player-item" wx:for="{{playerList}}" wx:key="_id">
-        <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
-        <view class="avatar avatar-placeholder" wx:else></view>
-        <text>{{item.nickName || '未知'}}</text>
+  <!-- Tab 导航 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="onTabChange">比赛</view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="onTabChange">排名</view>
+    <view class="tab-item {{activeTab === 2 ? 'active' : ''}}" data-index="2" bindtap="onTabChange">对局</view>
+  </view>
+
+  <!-- 第一栏：比赛（报名） -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <view class="card">
+      <view class="section-title">报名列表</view>
+      <view class="player-list" wx:if="{{playerList.length > 0}}">
+        <view class="player-item" wx:for="{{playerList}}" wx:key="_id">
+          <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
+          <view class="avatar avatar-placeholder" wx:else></view>
+          <text>{{item.nickName || '未知'}}</text>
+        </view>
       </view>
+      <view class="empty-tip" wx:else>暂无报名</view>
     </view>
-    <view class="empty-tip" wx:else>暂无报名</view>
+
+    <view class="actions">
+      <button
+        wx:if="{{!hasJoined && match.status === 'registering'}}"
+        class="btn-primary"
+        bindtap="onJoinTap"
+      >立即报名</button>
+
+      <button
+        wx:if="{{isCreator && match.status === 'registering'}}"
+        class="btn-robot"
+        bindtap="onAddRobotTap"
+      >添加机器人（测试）</button>
+
+      <button
+        wx:if="{{isCreator && match.status === 'registering' && match.players && match.players.length >= match.minPlayers}}"
+        class="btn-primary"
+        bindtap="onStartTeamTap"
+      >开始组队</button>
+    </view>
   </view>
 
-  <view class="actions">
-    <button
-      wx:if="{{!hasJoined && match.status === 'registering'}}"
-      class="btn-primary"
-      bindtap="onJoinTap"
-    >立即报名</button>
-
-    <button
-      wx:if="{{isCreator && match.status === 'registering' && match.players && match.players.length >= match.minPlayers}}"
-      class="btn-primary"
-      bindtap="onStartTeamTap"
-    >开始组队</button>
+  <!-- 第二栏：排名 -->
+  <view class="tab-content" wx:if="{{activeTab === 1 && match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished')}}">
+    <view class="card">
+      <view class="section-title">排名</view>
+      <view class="rankings-table" wx:if="{{rankings.length > 0}}">
+        <view class="rank-header">
+          <text class="col-rank">排名</text>
+          <text class="col-player">选手</text>
+          <text class="col-wl">胜-负</text>
+          <text class="col-pts">积分</text>
+          <text class="col-net">净胜分</text>
+        </view>
+        <view class="rank-row" wx:for="{{rankings}}" wx:key="_id">
+          <text class="col-rank">{{index + 1}}</text>
+          <view class="col-player">
+            <image class="avatar-sm" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
+            <view class="avatar-sm avatar-placeholder" wx:else></view>
+            <text>{{item.nickName || '未知'}}</text>
+          </view>
+          <text class="col-wl">{{item.wins}}-{{item.losses}}</text>
+          <text class="col-pts">{{item.points}}</text>
+          <text class="col-net">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
+        </view>
+      </view>
+      <view class="empty-tip" wx:else>暂无排名数据</view>
+    </view>
   </view>
 
-  <view class="card" wx:if="{{match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished')}}">
-    <view class="section-title">组队结果</view>
-    <view class="teams-display">
-      <text>组队已完成，详见云端资料</text>
+  <!-- 第三栏：对局 -->
+  <view class="tab-content" wx:if="{{activeTab === 2 && match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished')}}">
+    <view class="card">
+      <view class="section-title">对局</view>
+      <view class="matchups-list" wx:if="{{matchups.length > 0}}">
+        <view class="matchup-item" wx:for="{{matchups}}" wx:key="gameIndex">
+          <view class="matchup-label">第 {{item.gameIndex}} 场</view>
+          <view class="matchup-players">
+            <view class="matchup-player">
+              <image class="avatar-sm" src="{{item.player1.avatarUrl}}" mode="aspectFill" wx:if="{{item.player1.avatarUrl}}"></image>
+              <view class="avatar-sm avatar-placeholder" wx:else></view>
+              <text>{{item.player1.nickName || '未知'}}</text>
+            </view>
+            <view class="matchup-vs">VS</view>
+            <view class="matchup-player">
+              <image class="avatar-sm" src="{{item.player2.avatarUrl}}" mode="aspectFill" wx:if="{{item.player2.avatarUrl}}"></image>
+              <view class="avatar-sm avatar-placeholder" wx:else></view>
+              <text>{{item.player2.nickName || '未知'}}</text>
+            </view>
+          </view>
+          <view class="matchup-score" wx:if="{{item.winner}}">
+            <text>胜：{{item.winner === item.player1._id ? item.player1.nickName : item.player2.nickName}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty-tip" wx:else>暂无对局</view>
+    </view>
+  </view>
+
+  <!-- 无 teams 时排名/对局 tab 提示 -->
+  <view class="tab-content" wx:if="{{activeTab === 1 && !(match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished'))}}">
+    <view class="card">
+      <view class="empty-tip">组队后方可查看排名</view>
+    </view>
+  </view>
+  <view class="tab-content" wx:if="{{activeTab === 2 && !(match.teams && (match.status === 'teaming' || match.status === 'playing' || match.status === 'finished'))}}">
+    <view class="card">
+      <view class="empty-tip">组队后方可查看对局</view>
     </view>
   </view>
 </view>

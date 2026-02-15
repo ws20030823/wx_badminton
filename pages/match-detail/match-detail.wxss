@@ -98,7 +98,150 @@
   margin-bottom: 0;
 }
 
+.actions .btn-robot {
+  background: #fff;
+  color: #999;
+  border: 2rpx solid #ddd;
+}
+
 .teams-display {
   font-size: 28rpx;
   color: #666;
+}
+
+/* Tab 导航 */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-radius: 20rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 28rpx 0;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #1565c0;
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  background: #1565c0;
+  border-radius: 3rpx;
+}
+
+.tab-content {
+  margin-bottom: 24rpx;
+}
+
+/* 排名表格 */
+.rankings-table {
+  font-size: 26rpx;
+}
+
+.rank-header {
+  display: flex;
+  padding: 20rpx 0;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2rpx solid #eee;
+}
+
+.rank-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.rank-row:last-child {
+  border-bottom: none;
+}
+
+.col-rank {
+  width: 80rpx;
+  text-align: center;
+}
+
+.col-player {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+
+.col-wl, .col-pts, .col-net {
+  width: 100rpx;
+  text-align: center;
+}
+
+.avatar-sm {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+/* 对局卡片 */
+.matchups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.matchup-item {
+  padding: 24rpx;
+  background: #fafafa;
+  border-radius: 16rpx;
+  border: 1rpx solid #eee;
+}
+
+.matchup-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.matchup-players {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+
+.matchup-player {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+
+.matchup-vs {
+  font-size: 28rpx;
+  color: #999;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.matchup-score {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #1565c0;
 }

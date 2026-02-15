@@ -38,24 +38,16 @@ Page({
     const short = userId ? String(userId).slice(-4) : '';
     this.setData({ userInfo, userIdShort: short || '---' });
 
-    if (!userId) {
-      return;
-    }
-
     try {
-      const db = wx.cloud.database();
-      const res = await db.collection('users').doc(userId).get();
-      if (res.data && res.data.stats) {
-        const stats = res.data.stats;
-        const winRate = stats.wins + stats.losses > 0
-          ? ((stats.wins / (stats.wins + stats.losses)) * 100).toFixed(1)
-          : 0;
-        this.setData({
-          stats: {
-            ...stats,
-            winRate
-          }
-        });
+      const res = await wx.cloud.callFunction({ name: 'getUserStats' });
+      const result = res.result;
+      if (result && result.success && result.stats) {
+        this.setData({ stats: result.stats });
+      }
+      if (result && result.success && result.userId && !userId) {
+        app.globalData.userId = result.userId;
+        wx.setStorageSync('userId', result.userId);
+        this.setData({ userIdShort: String(result.userId).slice(-4) });
       }
     } catch (err) {
       console.error('加载用户统计失败', err);
@@ -64,12 +56,30 @@ Page({
 
   onLoginTap() {
     wx.getUserProfile({
-      desc: '用於完善用戶資料',
-      success: (res) => {
+      desc: '用于完善用户资料',
+      success: async (res) => {
         const userInfo = res.userInfo;
-        // getUserProfile 不返回 _id，userId 会在首次创建/加入比赛时由云函数创建用户后获得
         app.setUserInfo(userInfo, null);
         this.loadUserInfo();
+
+        try {
+          const cloudRes = await wx.cloud.callFunction({
+            name: 'saveUser',
+            data: {
+              nickName: userInfo.nickName,
+              avatarUrl: userInfo.avatarUrl
+            }
+          });
+          const result = cloudRes.result;
+          if (result && result.success && result.userId) {
+            app.setUserInfo(userInfo, result.userId);
+            this.loadUserInfo();
+            wx.showToast({ title: '登录成功', icon: 'success' });
+          }
+        } catch (err) {
+          console.error('saveUser error:', err);
+          wx.showToast({ title: '登录成功，数据同步失败', icon: 'none' });
+        }
       },
       fail: (err) => {
         wx.showToast({ title: '授权失败', icon: 'none' });
