@@ -9,9 +9,12 @@
     <view class="match-stats">
       <text>报名人数：{{match.players ? match.players.length : 0}} / {{match.maxPlayers}}</text>
     </view>
-    <view class="match-extras" wx:if="{{match.location || match.time}}">
-      <text wx:if="{{match.time}}">时间：{{match.time}}</text>
+    <view class="match-extras" wx:if="{{match.location || match.time || match.startTime || match.endTime || match.courtNumber}}">
+      <text wx:if="{{match.startTime && match.endTime}}">时间：{{match.startTime}} - {{match.endTime}}</text>
+      <text wx:elif="{{match.startTime}}">开始：{{match.startTime}}</text>
+      <text wx:elif="{{match.time}}">时间：{{match.time}}</text>
       <text wx:if="{{match.location}}">地点：{{match.location}}</text>
+      <text wx:if="{{match.location && match.courtNumber}}"> ({{match.courtNumber}})</text>
     </view>
   </view>
 

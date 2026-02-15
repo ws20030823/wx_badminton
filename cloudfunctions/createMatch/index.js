@@ -7,7 +7,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
 
-  const { name, type, subMode, minPlayers, maxPlayers, time, location } = event;
+  const { name, type, subMode, minPlayers, maxPlayers, startTime, endTime, location, locationDetail, courtNumber } = event;
 
   if (!name || !type || !subMode) {
     return { success: false, message: '缺少必要参数' };
@@ -61,8 +61,18 @@ exports.main = async (event, context) => {
       finishedAt: null
     };
 
-    if (time) matchData.time = time;
+    if (startTime) matchData.startTime = String(startTime).trim();
+    if (endTime) matchData.endTime = String(endTime).trim();
     if (location) matchData.location = String(location).trim();
+    if (locationDetail && typeof locationDetail === 'object') {
+      matchData.locationDetail = {
+        name: locationDetail.name || '',
+        address: locationDetail.address || '',
+        latitude: locationDetail.latitude,
+        longitude: locationDetail.longitude
+      };
+    }
+    if (courtNumber) matchData.courtNumber = String(courtNumber).trim();
 
     const res = await db.collection('matches').add({ data: matchData });
     return { success: true, matchId: res._id };

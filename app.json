@@ -42,5 +42,11 @@
   },
   "cloud": true,
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于地图选点选择比赛地点"
+    }
+  },
+  "requiredPrivateInfos": ["chooseLocation"]
 }

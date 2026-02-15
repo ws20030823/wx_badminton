@@ -103,8 +103,8 @@ Page({
       subModeText: subMap[m.subMode] || m.subMode,
       dateMonth,
       dateDay,
-      timeText: m.time || '时间待定',
-      locationText: m.location || '地点待定'
+      timeText: (m.startTime && m.endTime) ? `${m.startTime} - ${m.endTime}` : (m.startTime || m.time || '时间待定'),
+      locationText: m.location ? (m.courtNumber ? `${m.location} (${m.courtNumber})` : m.location) : '地点待定'
     };
   }
 });

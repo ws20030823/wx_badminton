@@ -46,26 +46,72 @@
     </view>
 
     <view class="form-item">
-      <text class="label">比赛时间</text>
-      <picker mode="date" value="{{time}}" bindchange="onTimeChange">
-        <view class="picker-wrap">
-          <text class="picker-icon">📅</text>
-          <text class="picker-text {{time ? '' : 'placeholder'}}">{{time || '请选择比赛时间 (可选)'}}</text>
-          <text class="picker-arrow">▼</text>
-        </view>
-      </picker>
+      <text class="label">开始时间</text>
+      <view class="datetime-row">
+        <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+          <view class="picker-wrap flex-1">
+            <text class="picker-icon">📅</text>
+            <text class="picker-text {{startDate ? '' : 'placeholder'}}">{{startDate || '日期'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+        <picker mode="time" value="{{startTimeOnly}}" bindchange="onStartTimeChange">
+          <view class="picker-wrap flex-1">
+            <text class="picker-icon">🕐</text>
+            <text class="picker-text {{startTimeOnly ? '' : 'placeholder'}}">{{startTimeOnly || '时刻'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">结束时间</text>
+      <view class="datetime-row">
+        <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+          <view class="picker-wrap flex-1">
+            <text class="picker-icon">📅</text>
+            <text class="picker-text {{endDate ? '' : 'placeholder'}}">{{endDate || '日期'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+        <picker mode="time" value="{{endTimeOnly}}" bindchange="onEndTimeChange">
+          <view class="picker-wrap flex-1">
+            <text class="picker-icon">🕐</text>
+            <text class="picker-text {{endTimeOnly ? '' : 'placeholder'}}">{{endTimeOnly || '时刻'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
     </view>
 
     <view class="form-item">
       <text class="label">比赛地点</text>
+      <view class="location-row">
+        <view class="input-wrap flex-1">
+          <text class="input-icon pin">📍</text>
+          <input
+            class="input"
+            placeholder="请输入场馆名称或点击选点 (可选)"
+            placeholder-class="placeholder"
+            value="{{location}}"
+            bindinput="onLocationInput"
+          />
+        </view>
+        <button class="map-pick-btn" bindtap="onChooseLocation">选择地点</button>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">场馆场地号</text>
       <view class="input-wrap">
-        <text class="input-icon pin">📍</text>
+        <text class="input-icon">#</text>
         <input
           class="input"
-          placeholder="请输入场馆名称 (可选)"
+          placeholder="例如: 1号场"
           placeholder-class="placeholder"
-          value="{{location}}"
-          bindinput="onLocationInput"
+          value="{{courtNumber}}"
+          bindinput="onCourtNumberInput"
         />
       </view>
     </view>

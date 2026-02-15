@@ -107,6 +107,42 @@
   color: #999;
 }
 
+.location-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.map-pick-btn {
+  flex-shrink: 0;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  background: #fff;
+  color: #1565c0;
+  border: 2rpx solid #1565c0;
+  border-radius: 16rpx;
+}
+
+.map-pick-btn::after {
+  border: none;
+}
+
+.datetime-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.datetime-row .picker-wrap {
+  flex: 1;
+}
+
 .picker-wrap {
   display: flex;
   align-items: center;

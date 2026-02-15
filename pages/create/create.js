@@ -10,8 +10,13 @@ Page({
     name: '',
     minPlayers: 4,
     maxPlayers: 8,
-    time: '',
-    location: ''
+    startDate: '',
+    startTimeOnly: '',
+    endDate: '',
+    endTimeOnly: '',
+    location: '',
+    locationDetail: null,
+    courtNumber: ''
   },
 
   onLoad(options) {
@@ -42,16 +47,54 @@ Page({
     this.setData({ maxPlayers: parseInt(e.detail.value) || 8 });
   },
 
-  onTimeChange(e) {
-    this.setData({ time: e.detail.value });
+  onStartDateChange(e) {
+    this.setData({ startDate: e.detail.value });
+  },
+
+  onStartTimeChange(e) {
+    this.setData({ startTimeOnly: e.detail.value });
+  },
+
+  onEndDateChange(e) {
+    this.setData({ endDate: e.detail.value });
+  },
+
+  onEndTimeChange(e) {
+    this.setData({ endTimeOnly: e.detail.value });
   },
 
   onLocationInput(e) {
     this.setData({ location: e.detail.value });
   },
 
+  onChooseLocation() {
+    wx.chooseLocation({
+      success: (res) => {
+        const location = res.name || res.address || '';
+        const locationDetail = {
+          name: res.name,
+          address: res.address,
+          latitude: res.latitude,
+          longitude: res.longitude
+        };
+        this.setData({ location, locationDetail });
+      },
+      fail: (err) => {
+        if (err.errMsg && !err.errMsg.includes('cancel')) {
+          wx.showToast({ title: '选点失败', icon: 'none' });
+        }
+      }
+    });
+  },
+
+  onCourtNumberInput(e) {
+    this.setData({ courtNumber: e.detail.value });
+  },
+
   async onSubmit() {
-    const { name, type, subMode, minPlayers, maxPlayers, time, location } = this.data;
+    const { name, type, subMode, minPlayers, maxPlayers, startDate, startTimeOnly, endDate, endTimeOnly, location, locationDetail, courtNumber } = this.data;
+    const startTime = (startDate && startTimeOnly) ? `${startDate} ${startTimeOnly}` : '';
+    const endTime = (endDate && endTimeOnly) ? `${endDate} ${endTimeOnly}` : '';
 
     if (!name || !name.trim()) {
       wx.showToast({ title: '请输入比赛名称', icon: 'none' });
@@ -65,6 +108,11 @@ Page({
 
     if (minPlayers < 2 || maxPlayers > 16) {
       wx.showToast({ title: '人数范围请设为 2-16', icon: 'none' });
+      return;
+    }
+
+    if (startTime && endTime && new Date(endTime) <= new Date(startTime)) {
+      wx.showToast({ title: '结束时间须晚于开始时间', icon: 'none' });
       return;
     }
 
@@ -85,8 +133,11 @@ Page({
           subMode,
           minPlayers,
           maxPlayers,
-          time: time || undefined,
-          location: location.trim() || undefined
+          startTime: startTime || undefined,
+          endTime: endTime || undefined,
+          location: location.trim() || undefined,
+          locationDetail: locationDetail || undefined,
+          courtNumber: courtNumber.trim() || undefined
         }
       });
 
