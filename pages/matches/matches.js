@@ -17,6 +17,8 @@ const SUBMODE_OPTS = [
   { value: 'knockout', label: '晋级赛' }
 ];
 
+const SWIPE_DELETE_WIDTH = 120; // rpx
+
 Page({
   data: {
     activeTab: 0,
@@ -30,6 +32,7 @@ Page({
     filterSubMode: [],
     filterPopupVisible: false,
     filterCount: 0,
+    swipeOffsetMap: {},
     statusOpts: STATUS_OPTS.map(o => ({ ...o, selected: false })),
     typeOpts: TYPE_OPTS.map(o => ({ ...o, selected: false })),
     subModeOpts: SUBMODE_OPTS.map(o => ({ ...o, selected: false }))
@@ -106,6 +109,91 @@ Page({
     wx.navigateTo({
       url: `/pages/match-detail/match-detail?id=${id}`
     });
+  },
+
+  onSwipeStart(e) {
+    const id = e.currentTarget.dataset.id;
+    const touch = e.touches && e.touches[0];
+    if (!touch) return;
+    this._swipeStartX = touch.clientX;
+    this._swipeId = id;
+  },
+
+  onSwipeMove(e) {
+    if (this._swipeId === undefined) return;
+    const touch = e.touches && e.touches[0];
+    if (!touch) return;
+    const sys = wx.getSystemInfoSync();
+    const pxToRpx = 750 / (sys.windowWidth || 375);
+    const deltaPx = touch.clientX - this._swipeStartX;
+    const deltaRpx = Math.round(deltaPx * pxToRpx);
+    this._swipeStartX = touch.clientX;
+    const current = this.data.swipeOffsetMap[this._swipeId] || 0;
+    let next = current + deltaRpx;
+    if (next > 0) next = 0;
+    if (next < -SWIPE_DELETE_WIDTH) next = -SWIPE_DELETE_WIDTH;
+    const map = { ...this.data.swipeOffsetMap, [this._swipeId]: next };
+    this.setData({ swipeOffsetMap: map });
+  },
+
+  onSwipeEnd(e) {
+    if (this._swipeId === undefined) return;
+    const id = this._swipeId;
+    this._swipeId = undefined;
+    const current = this.data.swipeOffsetMap[id] || 0;
+    const open = current < -SWIPE_DELETE_WIDTH / 2 ? -SWIPE_DELETE_WIDTH : 0;
+    const map = { ...this.data.swipeOffsetMap, [id]: open };
+    this.setData({ swipeOffsetMap: map });
+  },
+
+  onSwipeCellTap(e) {
+    const id = e.currentTarget.dataset.id;
+    const offset = this.data.swipeOffsetMap[id] || 0;
+    if (offset < 0) {
+      this.setData({ swipeOffsetMap: { ...this.data.swipeOffsetMap, [id]: 0 } });
+    } else {
+      this.onMatchTap(e);
+    }
+  },
+
+  onDeleteMatch(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    wx.showModal({
+      title: '确认删除',
+      content: '确定删除该比赛？删除后不可恢复。',
+      confirmText: '删除',
+      confirmColor: '#e53935',
+      success: (res) => {
+        if (res.confirm) this.doDeleteMatch(id);
+      }
+    });
+  },
+
+  async doDeleteMatch(matchId) {
+    wx.showLoading({ title: '删除中...' });
+    try {
+      const res = await wx.cloud.callFunction({ name: 'deleteMatch', data: { matchId } });
+      const result = res.result || {};
+      if (!result.success) {
+        wx.showToast({ title: result.message || '删除失败', icon: 'none' });
+        return;
+      }
+      const createdList = (this.data.createdList || []).filter((m) => m._id !== matchId);
+      this.setData({
+        createdList,
+        swipeOffsetMap: (() => {
+          const m = { ...this.data.swipeOffsetMap };
+          delete m[matchId];
+          return m;
+        })()
+      });
+      this.applyFilters();
+      wx.showToast({ title: '已删除', icon: 'success' });
+    } catch (err) {
+      console.error('doDeleteMatch error:', err);
+      wx.showToast({ title: err.errMsg || '删除失败', icon: 'none' });
+    }
   },
 
   onSearchInput(e) {

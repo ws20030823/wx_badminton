@@ -71,28 +71,43 @@
 
     <view wx:if="{{activeTab === 1}}" class="list-inner">
       <view
-        class="match-card"
+        class="swipe-cell"
         wx:for="{{displayCreatedList}}"
         wx:key="_id"
-        data-id="{{item._id}}"
-        bindtap="onMatchTap"
       >
-        <view class="card-date">
-          <text class="date-month">{{item.dateMonth}}</text>
-          <text class="date-day">{{item.dateDay}}</text>
-        </view>
-        <view class="card-content">
-          <view class="card-top">
-            <text class="match-name">{{item.name}}</text>
-            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
-          </view>
-          <view class="card-info">
-            <text class="info-item">🕐 {{item.timeText}}</text>
-            <text class="info-item">📍 {{item.locationText}}</text>
-          </view>
-          <text class="mode-tag">{{item.typeText}} - {{item.subModeText}}</text>
-          <view class="result-link" wx:if="{{item.status === 'finished'}}" bindtap="onMatchTap" data-id="{{item._id}}">
-            查看对战结果 >
+        <view
+          class="swipe-delete"
+          data-id="{{item._id}}"
+          catchtap="onDeleteMatch"
+        >删除</view>
+        <view
+          class="swipe-card-wrap"
+          style="transform: translateX({{swipeOffsetMap[item._id] || 0}}rpx)"
+          data-id="{{item._id}}"
+          bindtouchstart="onSwipeStart"
+          bindtouchmove="onSwipeMove"
+          bindtouchend="onSwipeEnd"
+          bindtap="onSwipeCellTap"
+        >
+          <view class="match-card">
+            <view class="card-date">
+              <text class="date-month">{{item.dateMonth}}</text>
+              <text class="date-day">{{item.dateDay}}</text>
+            </view>
+            <view class="card-content">
+              <view class="card-top">
+                <text class="match-name">{{item.name}}</text>
+                <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+              </view>
+              <view class="card-info">
+                <text class="info-item">🕐 {{item.timeText}}</text>
+                <text class="info-item">📍 {{item.locationText}}</text>
+              </view>
+              <text class="mode-tag">{{item.typeText}} - {{item.subModeText}}</text>
+              <view class="result-link" wx:if="{{item.status === 'finished'}}" catchtap="onMatchTap" data-id="{{item._id}}">
+                查看对战结果 >
+              </view>
+            </view>
           </view>
         </view>
       </view>
