@@ -1,19 +1,36 @@
 <!--pages/matches/matches.wxml - 我的对战-->
 <view class="page">
-  <view class="tabs-wrap">
-    <view
-      class="tab {{activeTab === 0 ? 'active' : ''}}"
-      data-index="0"
-      bindtap="onTabChange"
-    >我参与的</view>
-    <view
-      class="tab {{activeTab === 1 ? 'active' : ''}}"
-      data-index="1"
-      bindtap="onTabChange"
-    >我创建的</view>
-    <view class="tab-underline" style="left: {{activeTab === 0 ? '15%' : '55%'}}"></view>
+  <view class="search-bar-wrap">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索比赛名称/地点"
+        placeholder-class="search-placeholder"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchInput"
+      />
+    </view>
+    <view class="filter-btn {{filterCount > 0 ? 'active' : ''}}" bindtap="onFilterTap">
+      <text class="filter-icon">筛选</text>
+      <view class="filter-badge" wx:if="{{filterCount > 0}}">{{filterCount}}</view>
+    </view>
   </view>
-  <text class="tab-hint">选择创建的和参加的比赛</text>
+  <view class="tabs-wrap">
+    <view class="tabs-inner">
+      <view
+        class="tab-item {{activeTab === 0 ? 'active' : ''}}"
+        data-index="0"
+        bindtap="onTabChange"
+      >我参与的</view>
+      <view
+        class="tab-item {{activeTab === 1 ? 'active' : ''}}"
+        data-index="1"
+        bindtap="onTabChange"
+      >我创建的</view>
+    </view>
+  </view>
 
   <scroll-view
     scroll-y
@@ -25,7 +42,7 @@
     <view wx:if="{{activeTab === 0}}" class="list-inner">
       <view
         class="match-card"
-        wx:for="{{joinedList}}"
+        wx:for="{{displayJoinedList}}"
         wx:key="_id"
         data-id="{{item._id}}"
         bindtap="onMatchTap"
@@ -49,13 +66,13 @@
           </view>
         </view>
       </view>
-      <view class="empty-tip" wx:if="{{joinedList.length === 0}}">暂无参与的比赛</view>
+      <view class="empty-tip" wx:if="{{displayJoinedList.length === 0}}">暂无参与的比赛</view>
     </view>
 
     <view wx:if="{{activeTab === 1}}" class="list-inner">
       <view
         class="match-card"
-        wx:for="{{createdList}}"
+        wx:for="{{displayCreatedList}}"
         wx:key="_id"
         data-id="{{item._id}}"
         bindtap="onMatchTap"
@@ -79,7 +96,57 @@
           </view>
         </view>
       </view>
-      <view class="empty-tip" wx:if="{{createdList.length === 0}}">暂无创建的比赛</view>
+      <view class="empty-tip" wx:if="{{displayCreatedList.length === 0}}">暂无创建的比赛</view>
     </view>
   </scroll-view>
+
+  <view class="filter-mask {{filterPopupVisible ? 'show' : ''}}" catchtap="onFilterClose"></view>
+  <view class="filter-panel {{filterPopupVisible ? 'show' : ''}}">
+    <view class="filter-panel-header">
+      <text class="filter-panel-title">筛选条件</text>
+      <view class="filter-panel-actions">
+        <text class="filter-reset" bindtap="onFilterReset">重置</text>
+        <text class="filter-confirm" bindtap="onFilterConfirm">确定</text>
+      </view>
+    </view>
+    <view class="filter-section">
+      <text class="filter-section-title">状态</text>
+      <view class="filter-tags">
+        <view
+          wx:for="{{statusOpts}}"
+          wx:key="value"
+          class="filter-tag {{item.selected ? 'selected' : ''}}"
+          data-category="status"
+          data-value="{{item.value}}"
+          bindtap="onFilterToggle"
+        >{{item.label}}</view>
+      </view>
+    </view>
+    <view class="filter-section">
+      <text class="filter-section-title">赛制</text>
+      <view class="filter-tags">
+        <view
+          wx:for="{{typeOpts}}"
+          wx:key="value"
+          class="filter-tag {{item.selected ? 'selected' : ''}}"
+          data-category="type"
+          data-value="{{item.value}}"
+          bindtap="onFilterToggle"
+        >{{item.label}}</view>
+      </view>
+    </view>
+    <view class="filter-section">
+      <text class="filter-section-title">模式</text>
+      <view class="filter-tags">
+        <view
+          wx:for="{{subModeOpts}}"
+          wx:key="value"
+          class="filter-tag {{item.selected ? 'selected' : ''}}"
+          data-category="subMode"
+          data-value="{{item.value}}"
+          bindtap="onFilterToggle"
+        >{{item.label}}</view>
+      </view>
+    </view>
+  </view>
 </view>

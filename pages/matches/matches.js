@@ -1,11 +1,38 @@
 // pages/matches/matches.js - 我的对战
 const app = getApp();
 
+const STATUS_OPTS = [
+  { value: 'registering', label: '报名中' },
+  { value: 'teaming', label: '组队中' },
+  { value: 'playing', label: '进行中' },
+  { value: 'finished', label: '已结束' }
+];
+const TYPE_OPTS = [
+  { value: 'singles', label: '单打' },
+  { value: 'doubles', label: '双打' }
+];
+const SUBMODE_OPTS = [
+  { value: 'single-turn', label: '单打转' },
+  { value: 'team-turn', label: '小队转' },
+  { value: 'knockout', label: '晋级赛' }
+];
+
 Page({
   data: {
     activeTab: 0,
     joinedList: [],
-    createdList: []
+    createdList: [],
+    displayJoinedList: [],
+    displayCreatedList: [],
+    searchKeyword: '',
+    filterStatus: [],
+    filterType: [],
+    filterSubMode: [],
+    filterPopupVisible: false,
+    filterCount: 0,
+    statusOpts: STATUS_OPTS.map(o => ({ ...o, selected: false })),
+    typeOpts: TYPE_OPTS.map(o => ({ ...o, selected: false })),
+    subModeOpts: SUBMODE_OPTS.map(o => ({ ...o, selected: false }))
   },
 
   onLoad() {},
@@ -25,7 +52,7 @@ Page({
   async loadMatches() {
     const userId = app.globalData.userId;
     if (!userId) {
-      this.setData({ joinedList: [], createdList: [] });
+      this.setData({ joinedList: [], createdList: [], displayJoinedList: [], displayCreatedList: [] });
       return Promise.resolve();
     }
 
@@ -50,13 +77,14 @@ Page({
         return tb - ta;
       });
 
-      this.setData({
-        joinedList: joined.map(m => this.formatMatch(m)),
-        createdList: created.map(m => this.formatMatch(m))
+      const joinedList = joined.map(m => this.formatMatch(m));
+      const createdList = created.map(m => this.formatMatch(m));
+      this.setData({ joinedList, createdList }, () => {
+        this.applyFilters();
       });
     } catch (err) {
       console.error('loadMatches error:', err);
-      this.setData({ joinedList: [], createdList: [] });
+      this.setData({ joinedList: [], createdList: [], displayJoinedList: [], displayCreatedList: [] });
       const msg = (err.errMsg || err.message || '').includes('INVALID_ENV')
         ? '请先在 app.js 中配置云开发环境 ID'
         : '加载失败';
@@ -77,6 +105,84 @@ Page({
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({
       url: `/pages/match-detail/match-detail?id=${id}`
+    });
+  },
+
+  onSearchInput(e) {
+    const searchKeyword = e.detail.value || '';
+    this.setData({ searchKeyword });
+    this.applyFilters();
+  },
+
+  onFilterTap() {
+    this.setData({ filterPopupVisible: true });
+  },
+
+  onFilterClose() {
+    this.setData({ filterPopupVisible: false });
+  },
+
+  onFilterToggle(e) {
+    const { category, value } = e.currentTarget.dataset;
+    const key = category === 'status' ? 'filterStatus' : category === 'type' ? 'filterType' : 'filterSubMode';
+    let arr = [...this.data[key]];
+    const idx = arr.indexOf(value);
+    if (idx >= 0) arr.splice(idx, 1);
+    else arr.push(value);
+    const filterStatus = category === 'status' ? arr : this.data.filterStatus;
+    const filterType = category === 'type' ? arr : this.data.filterType;
+    const filterSubMode = category === 'subMode' ? arr : this.data.filterSubMode;
+    this.setData({
+      filterStatus,
+      filterType,
+      filterSubMode,
+      statusOpts: STATUS_OPTS.map(o => ({ ...o, selected: filterStatus.includes(o.value) })),
+      typeOpts: TYPE_OPTS.map(o => ({ ...o, selected: filterType.includes(o.value) })),
+      subModeOpts: SUBMODE_OPTS.map(o => ({ ...o, selected: filterSubMode.includes(o.value) }))
+    });
+    this.applyFilters();
+  },
+
+  onFilterReset() {
+    this.setData({
+      filterStatus: [],
+      filterType: [],
+      filterSubMode: [],
+      statusOpts: STATUS_OPTS.map(o => ({ ...o, selected: false })),
+      typeOpts: TYPE_OPTS.map(o => ({ ...o, selected: false })),
+      subModeOpts: SUBMODE_OPTS.map(o => ({ ...o, selected: false }))
+    });
+    this.applyFilters();
+  },
+
+  onFilterConfirm() {
+    this.setData({ filterPopupVisible: false });
+  },
+
+  applyFilters() {
+    const { joinedList, createdList, searchKeyword, filterStatus, filterType, filterSubMode } = this.data;
+    const kw = (searchKeyword || '').trim().toLowerCase();
+    const filterOne = (list) => {
+      return (list || []).filter((m) => {
+        if (kw) {
+          const name = (m.name || '').toLowerCase();
+          const loc = (m.locationText || m.location || '').toLowerCase();
+          const court = (m.courtNumber || '').toLowerCase();
+          if (!name.includes(kw) && !loc.includes(kw) && !court.includes(kw)) {
+            return false;
+          }
+        }
+        if (filterStatus.length && !filterStatus.includes(m.status)) return false;
+        if (filterType.length && !filterType.includes(m.type)) return false;
+        if (filterSubMode.length && !filterSubMode.includes(m.subMode)) return false;
+        return true;
+      });
+    };
+    const filterCount = filterStatus.length + filterType.length + filterSubMode.length;
+    this.setData({
+      displayJoinedList: filterOne(joinedList),
+      displayCreatedList: filterOne(createdList),
+      filterCount
     });
   },
 
