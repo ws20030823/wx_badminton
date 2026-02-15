@@ -25,8 +25,15 @@ Page({
   },
 
   async loadUserInfo() {
-    const userInfo = app.globalData.userInfo;
-    const userId = app.globalData.userId;
+    let userInfo = app.globalData.userInfo;
+    let userId = app.globalData.userId;
+
+    // 清除无效的 userId（如旧版本存储的 'temp'），仅清除 userId 保留头像昵称
+    if (userId === 'temp' || userId === 'undefined' || String(userId) === 'null') {
+      app.globalData.userId = null;
+      wx.removeStorageSync('userId');
+      userId = null;
+    }
 
     const short = userId ? String(userId).slice(-4) : '';
     this.setData({ userInfo, userIdShort: short || '---' });
@@ -58,15 +65,11 @@ Page({
   onLoginTap() {
     wx.getUserProfile({
       desc: '用於完善用戶資料',
-      success: async (res) => {
+      success: (res) => {
         const userInfo = res.userInfo;
-        app.setUserInfo(userInfo, userInfo._id || 'temp');
+        // getUserProfile 不返回 _id，userId 会在首次创建/加入比赛时由云函数创建用户后获得
+        app.setUserInfo(userInfo, null);
         this.loadUserInfo();
-
-        try {
-          const cloudRes = await wx.cloud.callFunction({ name: 'createMatch', data: {} });
-          // 實際應有專門的 saveUser 雲函數，此處省略
-        } catch (e) {}
       },
       fail: (err) => {
         wx.showToast({ title: '授权失败', icon: 'none' });

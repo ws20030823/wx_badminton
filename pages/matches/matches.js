@@ -18,14 +18,15 @@ Page({
   },
 
   onTabChange(e) {
-    this.setData({ activeTab: e.currentTarget.dataset.index });
+    const index = parseInt(e.currentTarget.dataset.index, 10);
+    this.setData({ activeTab: index });
   },
 
   async loadMatches() {
     const userId = app.globalData.userId;
     if (!userId) {
       this.setData({ joinedList: [], createdList: [] });
-      return;
+      return Promise.resolve();
     }
 
     wx.showLoading({ title: '加载中...' });
@@ -34,27 +35,42 @@ Page({
       const db = wx.cloud.database();
 
       const [joinedRes, createdRes] = await Promise.all([
-        db.collection('matches').where({
-          players: userId
-        }).orderBy('createdAt', 'desc').limit(50).get(),
-        db.collection('matches').where({
-          creatorId: userId
-        }).orderBy('createdAt', 'desc').limit(50).get()
+        db.collection('matches').where({ players: userId }).limit(50).get(),
+        db.collection('matches').where({ creatorId: userId }).limit(50).get()
       ]);
 
+      const joined = (joinedRes.data || []).sort((a, b) => {
+        const ta = (a.createdAt && a.createdAt.seconds) || 0;
+        const tb = (b.createdAt && b.createdAt.seconds) || 0;
+        return tb - ta;
+      });
+      const created = (createdRes.data || []).sort((a, b) => {
+        const ta = (a.createdAt && a.createdAt.seconds) || 0;
+        const tb = (b.createdAt && b.createdAt.seconds) || 0;
+        return tb - ta;
+      });
+
       this.setData({
-        joinedList: (joinedRes.data || []).map(m => this.formatMatch(m)),
-        createdList: (createdRes.data || []).map(m => this.formatMatch(m))
+        joinedList: joined.map(m => this.formatMatch(m)),
+        createdList: created.map(m => this.formatMatch(m))
       });
     } catch (err) {
-      wx.showToast({ title: '加载失败', icon: 'none' });
+      console.error('loadMatches error:', err);
+      this.setData({ joinedList: [], createdList: [] });
+      const msg = (err.errMsg || err.message || '').includes('INVALID_ENV')
+        ? '请先在 app.js 中配置云开发环境 ID'
+        : '加载失败';
+      wx.showToast({ title: msg, icon: 'none', duration: 3000 });
     } finally {
       wx.hideLoading();
     }
+    return Promise.resolve();
   },
 
   onPullDownRefresh() {
-    this.loadMatches().then(() => wx.stopPullDownRefresh());
+    this.loadMatches().then(() => {
+      wx.stopPullDownRefresh();
+    });
   },
 
   onMatchTap(e) {
