@@ -13,6 +13,8 @@ exports.main = async (event, context) => {
   }
 
   const { winner, loser, score1, score2 } = matchInfo;
+  const winnerIds = Array.isArray(winner) ? winner : (winner ? [winner] : []);
+  const loserIds = Array.isArray(loser) ? loser : (loser ? [loser] : []);
 
   try {
     const matchRes = await db.collection('matches').doc(matchId).get();
@@ -28,19 +30,23 @@ exports.main = async (event, context) => {
       return { success: false, message: '无权限记录' };
     }
 
-    // 更新用户统计
-    if (winner) {
-      await db.collection('users').doc(winner).update({
-        data: { 'stats.wins': db.command.inc(1) }
-      });
+    // 更新用户统计（单打 1 人，双打 2 人）
+    for (const id of winnerIds) {
+      if (id) {
+        await db.collection('users').doc(id).update({
+          data: { 'stats.wins': db.command.inc(1) }
+        });
+      }
     }
-    if (loser) {
-      await db.collection('users').doc(loser).update({
-        data: { 'stats.losses': db.command.inc(1) }
-      });
+    for (const id of loserIds) {
+      if (id) {
+        await db.collection('users').doc(id).update({
+          data: { 'stats.losses': db.command.inc(1) }
+        });
+      }
     }
 
-    // 更新比赛结果（含 score1, score2）
+    // 更新比赛结果（含 score1, score2）；双打存数组
     const results = match.results || {};
     let key;
     if (matchInfo.groupId != null && matchInfo.matchIndex != null) {
@@ -50,7 +56,7 @@ exports.main = async (event, context) => {
     } else {
       key = matchInfo.resultKey || matchInfo.matchId || 'm1';
     }
-    const resultEntry = { winner, loser };
+    const resultEntry = { winner: winnerIds.length ? winnerIds : winner, loser: loserIds.length ? loserIds : loser };
     if (typeof score1 === 'number') resultEntry.score1 = score1;
     if (typeof score2 === 'number') resultEntry.score2 = score2;
     results[key] = resultEntry;
@@ -85,7 +91,10 @@ exports.main = async (event, context) => {
           });
         });
       }
-      isAllDone = expectedKeys.length > 0 && expectedKeys.every(k => results[k] && results[k].winner);
+      isAllDone = expectedKeys.length > 0 && expectedKeys.every(k => {
+        const w = results[k] && results[k].winner;
+        return w && (Array.isArray(w) ? w.length > 0 : true);
+      });
     }
 
     const updateData = { results };

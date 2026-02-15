@@ -247,6 +247,17 @@
   min-width: 0;
 }
 
+.matchup-doubles .matchup-team {
+  flex: 1;
+  min-width: 0;
+}
+
+.matchup-team-text {
+  font-size: 26rpx;
+  color: #333;
+  word-break: break-all;
+}
+
 .matchup-vs-wrap {
   display: flex;
   flex-direction: column;

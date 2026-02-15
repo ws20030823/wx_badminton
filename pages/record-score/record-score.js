@@ -80,8 +80,17 @@ Page({
       return;
     }
 
-    const winner = s1 > s2 ? matchup.player1._id : matchup.player2._id;
-    const loser = s1 > s2 ? matchup.player2._id : matchup.player1._id;
+    let winner;
+    let loser;
+    if (matchup.isDoubles && matchup.team1 && matchup.team2) {
+      const team1Ids = (matchup.team1 || []).map(p => p._id);
+      const team2Ids = (matchup.team2 || []).map(p => p._id);
+      winner = s1 > s2 ? team1Ids : team2Ids;
+      loser = s1 > s2 ? team2Ids : team1Ids;
+    } else {
+      winner = s1 > s2 ? matchup.player1._id : matchup.player2._id;
+      loser = s1 > s2 ? matchup.player2._id : matchup.player1._id;
+    }
 
     const matchInfo = {
       winner,

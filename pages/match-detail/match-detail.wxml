@@ -95,7 +95,7 @@
       <view class="matchups-list" wx:if="{{matchups.length > 0}}">
         <view class="matchup-item" wx:for="{{matchups}}" wx:key="gameIndex" bindtap="onMatchupTap" data-game-index="{{item.gameIndex}}">
           <view class="matchup-label">第 {{item.gameIndex}} 场</view>
-          <view class="matchup-players">
+          <view class="matchup-players" wx:if="{{!item.isDoubles}}">
             <view class="matchup-player">
               <image class="avatar-sm" src="{{item.player1.avatarUrl}}" mode="aspectFill" wx:if="{{item.player1.avatarUrl}}"></image>
               <view class="avatar-sm avatar-placeholder" wx:else></view>
@@ -111,8 +111,21 @@
               <text>{{item.player2.nickName || '未知'}}</text>
             </view>
           </view>
+          <view class="matchup-players matchup-doubles" wx:else>
+            <view class="matchup-team">
+              <text class="matchup-team-text">{{item.team1Names || '未知'}}</text>
+            </view>
+            <view class="matchup-vs-wrap">
+              <view class="matchup-vs">VS</view>
+              <view class="matchup-score-display" wx:if="{{item.score1 != null && item.score2 != null}}">{{item.score1}} : {{item.score2}}</view>
+            </view>
+            <view class="matchup-team">
+              <text class="matchup-team-text">{{item.team2Names || '未知'}}</text>
+            </view>
+          </view>
           <view class="matchup-winner" wx:if="{{item.winner}}">
-            <text>胜：{{item.winner === item.player1._id ? item.player1.nickName : item.player2.nickName}}</text>
+            <text wx:if="{{!item.isDoubles}}">胜：{{item.winner === item.player1._id ? item.player1.nickName : item.player2.nickName}}</text>
+            <text wx:else>胜：{{item.winnerTeamText || '一方'}}</text>
           </view>
         </view>
       </view>

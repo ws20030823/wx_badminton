@@ -1,16 +1,27 @@
 // utils/algorithm.js - 组队算法工具（云函数中也有实现，此处供前端预览或本地计算）
 
 /**
- * 单打转 - 轮转算法 (Round-Robin)
+ * 单打转 - 目标场次对应的轮数：4人4场、6人9场、8人12场，大于8人约12~18场
  */
-function roundRobin(players) {
+function desiredRounds(n) {
+  if (n <= 4) return 2;
+  if (n <= 6) return 3;
+  if (n <= 8) return 3;
+  return Math.min(n - 1, 3);
+}
+
+/**
+ * 单打转 - 有限轮转（只取前 maxRounds 轮），每人出场一致、无重复对局
+ */
+function roundRobinLimited(players, maxRounds) {
   const n = players.length;
   const isOdd = n % 2 === 1;
-  const numRounds = isOdd ? n : n - 1;
-  const rounds = [];
   const playersList = isOdd ? [...players, null] : [...players];
+  const totalRounds = isOdd ? n : n - 1;
+  const actualRounds = Math.min(maxRounds, totalRounds);
+  const rounds = [];
 
-  for (let round = 0; round < numRounds; round++) {
+  for (let round = 0; round < actualRounds; round++) {
     const matches = [];
     for (let i = 0; i < playersList.length / 2; i++) {
       const p1 = playersList[i];
@@ -24,6 +35,16 @@ function roundRobin(players) {
     playersList.splice(1, 0, last);
   }
   return { rounds };
+}
+
+/**
+ * 单打转 - 全轮转 (Round-Robin)，与原有行为一致
+ */
+function roundRobin(players) {
+  const n = players.length;
+  const isOdd = n % 2 === 1;
+  const numRounds = isOdd ? n : n - 1;
+  return roundRobinLimited(players, numRounds);
 }
 
 /**
@@ -77,6 +98,8 @@ function knockout(players) {
 }
 
 module.exports = {
+  desiredRounds,
+  roundRobinLimited,
   roundRobin,
   teamTurn,
   knockout

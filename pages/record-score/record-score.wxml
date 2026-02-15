@@ -1,8 +1,8 @@
 <!--pages/record-score/record-score.wxml - 录入比分-->
 <view class="page" wx:if="{{matchup}}">
   <view class="card matchup-card">
-    <view class="matchup-label">第 {{matchup.gameIndex}} 场</view>
-    <view class="matchup-versus">
+    <view class="matchup-label">第 {{matchup.gameIndex}} 场 {{matchup.isDoubles ? '（双打）' : ''}}</view>
+    <view class="matchup-versus" wx:if="{{!matchup.isDoubles}}">
       <view class="player-block">
         <image class="avatar" src="{{matchup.player1.avatarUrl}}" mode="aspectFill" wx:if="{{matchup.player1.avatarUrl}}"></image>
         <view class="avatar avatar-placeholder" wx:else></view>
@@ -15,11 +15,20 @@
         <text class="player-name">{{matchup.player2.nickName || '未知'}}</text>
       </view>
     </view>
+    <view class="matchup-versus matchup-doubles" wx:else>
+      <view class="team-block">
+        <text class="team-name">{{matchup.team1Names || '未知'}}</text>
+      </view>
+      <view class="vs-badge">VS</view>
+      <view class="team-block">
+        <text class="team-name">{{matchup.team2Names || '未知'}}</text>
+      </view>
+    </view>
   </view>
 
   <view class="card form-card">
     <view class="form-item">
-      <text class="label">{{matchup.player1.nickName || '未知'}} 得分</text>
+      <text class="label">{{matchup.isDoubles ? (matchup.team1Names || '队伍1') : (matchup.player1.nickName || '未知')}} 得分</text>
       <input
         class="score-input"
         type="number"
@@ -29,7 +38,7 @@
       />
     </view>
     <view class="form-item">
-      <text class="label">{{matchup.player2.nickName || '未知'}} 得分</text>
+      <text class="label">{{matchup.isDoubles ? (matchup.team2Names || '队伍2') : (matchup.player2.nickName || '未知')}} 得分</text>
       <input
         class="score-input"
         type="number"

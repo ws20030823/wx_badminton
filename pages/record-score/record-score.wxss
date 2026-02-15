@@ -56,6 +56,20 @@
   color: #333;
 }
 
+.matchup-doubles .team-block {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.team-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
 .vs-badge {
   font-size: 32rpx;
   font-weight: bold;

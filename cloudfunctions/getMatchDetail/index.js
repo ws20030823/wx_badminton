@@ -52,16 +52,18 @@ exports.main = async (event, context) => {
     if (match.players && match.players.length > 0) {
       match.players.forEach(pid => { wins[pid] = 0; losses[pid] = 0; netPoints[pid] = 0; });
       Object.values(results).forEach(r => {
-        if (r.winner) wins[r.winner] = (wins[r.winner] || 0) + 1;
-        if (r.loser) losses[r.loser] = (losses[r.loser] || 0) + 1;
-        if (r.winner && r.loser && r.winner !== r.loser) {
+        const winnerIds = Array.isArray(r.winner) ? r.winner : (r.winner ? [r.winner] : []);
+        const loserIds = Array.isArray(r.loser) ? r.loser : (r.loser ? [r.loser] : []);
+        winnerIds.forEach(id => { wins[id] = (wins[id] || 0) + 1; });
+        loserIds.forEach(id => { losses[id] = (losses[id] || 0) + 1; });
+        if (winnerIds.length && loserIds.length) {
           const s1 = typeof r.score1 === 'number' ? r.score1 : 0;
           const s2 = typeof r.score2 === 'number' ? r.score2 : 0;
           const winnerScore = Math.max(s1, s2);
           const loserScore = Math.min(s1, s2);
           const pointDiff = winnerScore - loserScore;
-          netPoints[r.winner] = (netPoints[r.winner] || 0) + pointDiff;
-          netPoints[r.loser] = (netPoints[r.loser] || 0) - pointDiff;
+          winnerIds.forEach(id => { netPoints[id] = (netPoints[id] || 0) + pointDiff; });
+          loserIds.forEach(id => { netPoints[id] = (netPoints[id] || 0) - pointDiff; });
         }
       });
       match.players.forEach(pid => {
@@ -84,27 +86,62 @@ exports.main = async (event, context) => {
       });
 
       const teams = match.teams || {};
+      const isDoublesMatch = match.type === 'doubles';
       let gameIndex = 0;
       if (teams.rounds && Array.isArray(teams.rounds)) {
         teams.rounds.forEach(r => {
           (r.matches || []).forEach((m, mi) => {
             gameIndex++;
-            const p1 = userMap[m.player1] || { _id: m.player1, nickName: '未知', avatarUrl: '' };
-            const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
             const resultKey = 'r' + r.round + '-m' + (mi + 1);
             const res = m.result || results[resultKey] || results[m.id];
-            matchups.push({
-              gameIndex,
-              round: r.round,
-              matchIndexInRound: mi + 1,
-              resultKey,
-              player1: { _id: p1._id, nickName: p1.nickName || '未知', avatarUrl: p1.avatarUrl || '' },
-              player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
-              winner: res && res.winner,
-              loser: res && res.loser,
-              score1: res && typeof res.score1 === 'number' ? res.score1 : null,
-              score2: res && typeof res.score2 === 'number' ? res.score2 : null
-            });
+            if (isDoublesMatch && m.team1 && m.team2) {
+              const team1 = (m.team1 || []).map(pid => userMap[pid] || { _id: pid, nickName: '未知', avatarUrl: '' });
+              const team2 = (m.team2 || []).map(pid => userMap[pid] || { _id: pid, nickName: '未知', avatarUrl: '' });
+              const winnerIds = res && res.winner ? (Array.isArray(res.winner) ? res.winner : [res.winner]) : [];
+              const team1Names = team1.map(p => p.nickName || '未知').join(' & ');
+              const team2Names = team2.map(p => p.nickName || '未知').join(' & ');
+              const winnerTeamText = winnerIds.length
+                ? (winnerIds[0] === (team1[0] && team1[0]._id) || winnerIds[0] === (team1[1] && team1[1]._id)
+                  ? team1Names
+                  : team2Names)
+                : '';
+              matchups.push({
+                gameIndex,
+                round: r.round,
+                matchIndexInRound: mi + 1,
+                resultKey,
+                isDoubles: true,
+                team1,
+                team2,
+                team1Names,
+                team2Names,
+                player1: null,
+                player2: null,
+                winner: res && res.winner,
+                loser: res && res.loser,
+                winnerTeamText,
+                score1: res && typeof res.score1 === 'number' ? res.score1 : null,
+                score2: res && typeof res.score2 === 'number' ? res.score2 : null
+              });
+            } else {
+              const p1 = userMap[m.player1] || { _id: m.player1, nickName: '未知', avatarUrl: '' };
+              const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
+              matchups.push({
+                gameIndex,
+                round: r.round,
+                matchIndexInRound: mi + 1,
+                resultKey,
+                isDoubles: false,
+                player1: { _id: p1._id, nickName: p1.nickName || '未知', avatarUrl: p1.avatarUrl || '' },
+                player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
+                team1: null,
+                team2: null,
+                winner: res && res.winner,
+                loser: res && res.loser,
+                score1: res && typeof res.score1 === 'number' ? res.score1 : null,
+                score2: res && typeof res.score2 === 'number' ? res.score2 : null
+              });
+            }
           });
         });
       }
