@@ -132,5 +132,13 @@ Page({
   onTabChange(e) {
     const index = parseInt(e.currentTarget.dataset.index, 10);
     this.setData({ activeTab: index });
+  },
+
+  onMatchupTap(e) {
+    const gameIndex = e.currentTarget.dataset.gameIndex;
+    if (!gameIndex) return;
+    wx.navigateTo({
+      url: `/pages/record-score/record-score?matchId=${this.data.matchId}&gameIndex=${gameIndex}`
+    });
   }
 });

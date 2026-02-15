@@ -5,13 +5,14 @@
     "pages/doubles-mode/doubles-mode",
     "pages/create/create",
     "pages/match-detail/match-detail",
+    "pages/record-score/record-score",
     "pages/matches/matches",
     "pages/profile/profile"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "羽毛球组队",
+    "navigationBarTitleText": "羽毛球组",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

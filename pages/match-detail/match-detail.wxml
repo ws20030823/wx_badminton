@@ -81,7 +81,7 @@
           </view>
           <text class="col-wl">{{item.wins}}-{{item.losses}}</text>
           <text class="col-pts">{{item.points}}</text>
-          <text class="col-net">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
+          <text class="col-net {{item.net >= 0 ? 'net-positive' : 'net-negative'}}">{{item.net >= 0 ? '+' : ''}}{{item.net}}</text>
         </view>
       </view>
       <view class="empty-tip" wx:else>暂无排名数据</view>
@@ -93,7 +93,7 @@
     <view class="card">
       <view class="section-title">对局</view>
       <view class="matchups-list" wx:if="{{matchups.length > 0}}">
-        <view class="matchup-item" wx:for="{{matchups}}" wx:key="gameIndex">
+        <view class="matchup-item" wx:for="{{matchups}}" wx:key="gameIndex" bindtap="onMatchupTap" data-game-index="{{item.gameIndex}}">
           <view class="matchup-label">第 {{item.gameIndex}} 场</view>
           <view class="matchup-players">
             <view class="matchup-player">
@@ -101,14 +101,17 @@
               <view class="avatar-sm avatar-placeholder" wx:else></view>
               <text>{{item.player1.nickName || '未知'}}</text>
             </view>
-            <view class="matchup-vs">VS</view>
+            <view class="matchup-vs-wrap">
+              <view class="matchup-vs">VS</view>
+              <view class="matchup-score-display" wx:if="{{item.score1 != null && item.score2 != null}}">{{item.score1}} : {{item.score2}}</view>
+            </view>
             <view class="matchup-player">
               <image class="avatar-sm" src="{{item.player2.avatarUrl}}" mode="aspectFill" wx:if="{{item.player2.avatarUrl}}"></image>
               <view class="avatar-sm avatar-placeholder" wx:else></view>
               <text>{{item.player2.nickName || '未知'}}</text>
             </view>
           </view>
-          <view class="matchup-score" wx:if="{{item.winner}}">
+          <view class="matchup-winner" wx:if="{{item.winner}}">
             <text>胜：{{item.winner === item.player1._id ? item.player1.nickName : item.player2.nickName}}</text>
           </view>
         </view>

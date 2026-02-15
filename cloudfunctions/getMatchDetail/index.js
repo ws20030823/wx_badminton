@@ -48,22 +48,34 @@ exports.main = async (event, context) => {
     const results = match.results || {};
     const wins = {};
     const losses = {};
+    const netPoints = {};
     if (match.players && match.players.length > 0) {
-      match.players.forEach(pid => { wins[pid] = 0; losses[pid] = 0; });
+      match.players.forEach(pid => { wins[pid] = 0; losses[pid] = 0; netPoints[pid] = 0; });
       Object.values(results).forEach(r => {
         if (r.winner) wins[r.winner] = (wins[r.winner] || 0) + 1;
         if (r.loser) losses[r.loser] = (losses[r.loser] || 0) + 1;
+        if (r.winner && r.loser && r.winner !== r.loser) {
+          const s1 = typeof r.score1 === 'number' ? r.score1 : 0;
+          const s2 = typeof r.score2 === 'number' ? r.score2 : 0;
+          const winnerScore = Math.max(s1, s2);
+          const loserScore = Math.min(s1, s2);
+          const pointDiff = winnerScore - loserScore;
+          netPoints[r.winner] = (netPoints[r.winner] || 0) + pointDiff;
+          netPoints[r.loser] = (netPoints[r.loser] || 0) - pointDiff;
+        }
       });
       match.players.forEach(pid => {
         const u = userMap[pid] || { _id: pid, nickName: '未知', avatarUrl: '' };
+        const w = wins[pid] || 0;
+        const l = losses[pid] || 0;
         rankings.push({
           _id: pid,
           nickName: u.nickName || '未知',
           avatarUrl: u.avatarUrl || '',
-          wins: wins[pid] || 0,
-          losses: losses[pid] || 0,
-          points: (wins[pid] || 0) * 3,
-          net: (wins[pid] || 0) - (losses[pid] || 0)
+          wins: w,
+          losses: l,
+          points: w * 2 + l * 1,
+          net: netPoints[pid] || 0
         });
       });
       rankings.sort((a, b) => {
@@ -79,31 +91,42 @@ exports.main = async (event, context) => {
             gameIndex++;
             const p1 = userMap[m.player1] || { _id: m.player1, nickName: '未知', avatarUrl: '' };
             const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
-            const res = m.result || results['r' + r.round + '-m' + (mi + 1)] || results[m.id];
+            const resultKey = 'r' + r.round + '-m' + (mi + 1);
+            const res = m.result || results[resultKey] || results[m.id];
             matchups.push({
               gameIndex,
               round: r.round,
+              matchIndexInRound: mi + 1,
+              resultKey,
               player1: { _id: p1._id, nickName: p1.nickName || '未知', avatarUrl: p1.avatarUrl || '' },
               player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
               winner: res && res.winner,
-              loser: res && res.loser
+              loser: res && res.loser,
+              score1: res && typeof res.score1 === 'number' ? res.score1 : null,
+              score2: res && typeof res.score2 === 'number' ? res.score2 : null
             });
           });
         });
       }
       if (teams.groups && Array.isArray(teams.groups)) {
         teams.groups.forEach(g => {
-          (g.matches || []).forEach(m => {
+          (g.matches || []).forEach((m, mi) => {
             gameIndex++;
             const p1 = userMap[m.player1] || { _id: m.player1, nickName: '未知', avatarUrl: '' };
             const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
+            const resultKey = 'g' + g.groupId + '-m' + (mi + 1);
+            const res = m.result || results[resultKey];
             matchups.push({
               gameIndex,
               groupId: g.groupId,
+              matchIndexInGroup: mi + 1,
+              resultKey,
               player1: { _id: p1._id, nickName: p1.nickName || '未知', avatarUrl: p1.avatarUrl || '' },
               player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
-              winner: m.result && m.result.winner,
-              loser: m.result && m.result.loser
+              winner: res && res.winner,
+              loser: res && res.loser,
+              score1: res && typeof res.score1 === 'number' ? res.score1 : null,
+              score2: res && typeof res.score2 === 'number' ? res.score2 : null
             });
           });
         });

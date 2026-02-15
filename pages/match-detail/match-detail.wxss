@@ -190,6 +190,14 @@
   text-align: center;
 }
 
+.col-net.net-positive {
+  color: #2e7d32;
+}
+
+.col-net.net-negative {
+  color: #999;
+}
+
 .avatar-sm {
   width: 48rpx;
   height: 48rpx;
@@ -207,9 +215,15 @@
 
 .matchup-item {
   padding: 24rpx;
-  background: #fafafa;
+  background: #fff;
   border-radius: 16rpx;
-  border: 1rpx solid #eee;
+  border: 2rpx solid #eee;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.matchup-item:active {
+  background: #f5f9ff;
+  border-color: #1565c0;
 }
 
 .matchup-label {
@@ -233,15 +247,28 @@
   min-width: 0;
 }
 
+.matchup-vs-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
 .matchup-vs {
   font-size: 28rpx;
   color: #999;
   font-weight: bold;
-  flex-shrink: 0;
 }
 
-.matchup-score {
+.matchup-score-display {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1565c0;
+}
+
+.matchup-winner {
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #1565c0;
+  color: #2e7d32;
 }

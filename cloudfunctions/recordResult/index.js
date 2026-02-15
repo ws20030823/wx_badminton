@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
     return { success: false, message: '缺少参数' };
   }
 
-  const { winner, loser } = matchInfo;
+  const { winner, loser, score1, score2 } = matchInfo;
 
   try {
     const matchRes = await db.collection('matches').doc(matchId).get();
@@ -40,12 +40,20 @@ exports.main = async (event, context) => {
       });
     }
 
-    // 更新比赛结果（结构依具体模式扩充）
+    // 更新比赛结果（含 score1, score2）
     const results = match.results || {};
-    const key = matchInfo.round
-      ? `r${matchInfo.round}-m${matchInfo.matchId || ''}`
-      : matchInfo.matchId || 'm1';
-    results[key] = { winner, loser };
+    let key;
+    if (matchInfo.groupId != null && matchInfo.matchIndex != null) {
+      key = `g${matchInfo.groupId}-m${matchInfo.matchIndex}`;
+    } else if (matchInfo.round != null && matchInfo.matchIndex != null) {
+      key = `r${matchInfo.round}-m${matchInfo.matchIndex}`;
+    } else {
+      key = matchInfo.resultKey || matchInfo.matchId || 'm1';
+    }
+    const resultEntry = { winner, loser };
+    if (typeof score1 === 'number') resultEntry.score1 = score1;
+    if (typeof score2 === 'number') resultEntry.score2 = score2;
+    results[key] = resultEntry;
 
     await db.collection('matches').doc(matchId).update({
       data: {

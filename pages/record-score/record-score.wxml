@@ -1,0 +1,48 @@
+<!--pages/record-score/record-score.wxml - 录入比分-->
+<view class="page" wx:if="{{matchup}}">
+  <view class="card matchup-card">
+    <view class="matchup-label">第 {{matchup.gameIndex}} 场</view>
+    <view class="matchup-versus">
+      <view class="player-block">
+        <image class="avatar" src="{{matchup.player1.avatarUrl}}" mode="aspectFill" wx:if="{{matchup.player1.avatarUrl}}"></image>
+        <view class="avatar avatar-placeholder" wx:else></view>
+        <text class="player-name">{{matchup.player1.nickName || '未知'}}</text>
+      </view>
+      <view class="vs-badge">VS</view>
+      <view class="player-block">
+        <image class="avatar" src="{{matchup.player2.avatarUrl}}" mode="aspectFill" wx:if="{{matchup.player2.avatarUrl}}"></image>
+        <view class="avatar avatar-placeholder" wx:else></view>
+        <text class="player-name">{{matchup.player2.nickName || '未知'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card form-card">
+    <view class="form-item">
+      <text class="label">{{matchup.player1.nickName || '未知'}} 得分</text>
+      <input
+        class="score-input"
+        type="number"
+        placeholder="0"
+        value="{{score1}}"
+        bindinput="onScore1Input"
+      />
+    </view>
+    <view class="form-item">
+      <text class="label">{{matchup.player2.nickName || '未知'}} 得分</text>
+      <input
+        class="score-input"
+        type="number"
+        placeholder="0"
+        value="{{score2}}"
+        bindinput="onScore2Input"
+      />
+    </view>
+    <button class="submit-btn" bindtap="onSubmit">保存比分</button>
+  </view>
+</view>
+<view class="page" wx:else>
+  <view class="card">
+    <view class="empty-tip">加载中...</view>
+  </view>
+</view>
