@@ -43,6 +43,39 @@ exports.main = async (event, context) => {
       });
     }
 
+    let teamList = [];
+    let myTeamIndex = -1;
+    let m = match;
+    if (match.subMode === 'team-turn') {
+      let teamPlayers = match.teamPlayers;
+      const tc = match.teamCount || 2;
+      const playersFlat = (teamPlayers || []).flat();
+      const playersArr = match.players || [];
+      const needMigrate = !teamPlayers || !Array.isArray(teamPlayers) ||
+        teamPlayers.length < tc ||
+        (playersArr.length > 0 && playersFlat.length === 0);
+      if (needMigrate) {
+        teamPlayers = Array(tc).fill(null).map((_, i) => (i === 0 ? [...playersArr] : []));
+        await db.collection('matches').doc(matchId).update({
+          data: {
+            teamCount: tc,
+            teamNames: ['队伍A', '队伍B', '队伍C', '队伍D'].slice(0, tc),
+            teamPlayers
+          }
+        });
+        m = { ...match, teamPlayers, teamCount: tc };
+      }
+      if (m.teamPlayers && Array.isArray(m.teamPlayers)) {
+        const teamNames = m.teamNames || [];
+        teamList = m.teamPlayers.map((ids, i) => {
+          const label = (teamNames[i] && String(teamNames[i]).trim()) ? String(teamNames[i]).trim() : ('队伍' + 'ABCD'[i]);
+          const players = (ids || []).map(pid => userMap[pid] || { _id: pid, nickName: '未知', avatarUrl: '' });
+          if (userId && (ids || []).includes(userId)) myTeamIndex = i;
+          return { teamIndex: i, teamLabel: label, players, playerIds: ids || [] };
+        });
+      }
+    }
+
     const rankings = [];
     const matchups = [];
     const results = match.results || {};
@@ -177,6 +210,8 @@ exports.main = async (event, context) => {
       hasJoined,
       playerList,
       userMap,
+      teamList,
+      myTeamIndex,
       rankings,
       matchups
     };

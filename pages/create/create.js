@@ -10,6 +10,8 @@ Page({
     name: '',
     minPlayers: 4,
     maxPlayers: 8,
+    teamCount: 2,
+    teamNames: ['', ''],
     startDate: '',
     startTimeOnly: '',
     endDate: '',
@@ -27,12 +29,33 @@ Page({
       'team-turn': '小队转',
       'knockout': '晋级赛'
     };
+    const teamNames = subMode === 'team-turn' ? ['', ''] : [];
     this.setData({
       type,
       subMode,
       typeText,
-      subModeText: subModeMap[subMode] || subMode
+      subModeText: subModeMap[subMode] || subMode,
+      teamNames
     });
+  },
+
+  onTeamCountChange(e) {
+    const teamCount = parseInt(e.currentTarget.dataset.count, 10) || 2;
+    let teamNames = this.data.teamNames || [];
+    if (teamNames.length < teamCount) {
+      while (teamNames.length < teamCount) teamNames.push('');
+    } else {
+      teamNames = teamNames.slice(0, teamCount);
+    }
+    this.setData({ teamCount, teamNames });
+  },
+
+  onTeamNameInput(e) {
+    const index = parseInt(e.currentTarget.dataset.index, 10);
+    const val = e.detail.value || '';
+    const teamNames = [...(this.data.teamNames || [])];
+    teamNames[index] = val;
+    this.setData({ teamNames });
   },
 
   onNameInput(e) {
@@ -92,7 +115,7 @@ Page({
   },
 
   async onSubmit() {
-    const { name, type, subMode, minPlayers, maxPlayers, startDate, startTimeOnly, endDate, endTimeOnly, location, locationDetail, courtNumber } = this.data;
+    const { name, type, subMode, minPlayers, maxPlayers, startDate, startTimeOnly, endDate, endTimeOnly, location, locationDetail, courtNumber, teamCount, teamNames } = this.data;
     const startTime = (startDate && startTimeOnly) ? `${startDate} ${startTimeOnly}` : '';
     const endTime = (endDate && endTimeOnly) ? `${endDate} ${endTimeOnly}` : '';
 
@@ -125,20 +148,25 @@ Page({
     wx.showLoading({ title: '创建中...' });
 
     try {
+      const payload = {
+        name: name.trim(),
+        type,
+        subMode,
+        minPlayers,
+        maxPlayers,
+        startTime: startTime || undefined,
+        endTime: endTime || undefined,
+        location: location.trim() || undefined,
+        locationDetail: locationDetail || undefined,
+        courtNumber: courtNumber.trim() || undefined
+      };
+      if (subMode === 'team-turn') {
+        payload.teamCount = teamCount || 2;
+        payload.teamNames = (teamNames || []).slice(0, teamCount || 2).map(s => (s && String(s).trim()) || '');
+      }
       const res = await wx.cloud.callFunction({
         name: 'createMatch',
-        data: {
-          name: name.trim(),
-          type,
-          subMode,
-          minPlayers,
-          maxPlayers,
-          startTime: startTime || undefined,
-          endTime: endTime || undefined,
-          location: location.trim() || undefined,
-          locationDetail: locationDetail || undefined,
-          courtNumber: courtNumber.trim() || undefined
-        }
+        data: payload
       });
 
       const result = res.result;

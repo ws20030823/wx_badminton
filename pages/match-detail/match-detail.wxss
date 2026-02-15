@@ -56,6 +56,76 @@
   gap: 12rpx;
 }
 
+/* 队伍卡片（小队转） */
+.team-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.team-card {
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  border: 2rpx solid #eee;
+  margin-bottom: 0;
+}
+
+.team-card.my-team {
+  border-color: #1565c0;
+  background: #f5f9ff;
+}
+
+.team-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 16rpx;
+  flex-wrap: wrap;
+}
+
+.team-label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.team-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.my-team-tag {
+  font-size: 22rpx;
+  color: #1565c0;
+  background: rgba(21, 101, 192, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-left: auto;
+}
+
+.team-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+.btn-switch-team {
+  margin-top: 16rpx;
+  padding: 0;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 26rpx;
+  background: transparent;
+  color: #1565c0;
+  border: 2rpx solid #1565c0;
+  border-radius: 32rpx;
+}
+
+.btn-switch-team::after {
+  border: none;
+}
+
 .avatar {
   width: 64rpx;
   height: 64rpx;

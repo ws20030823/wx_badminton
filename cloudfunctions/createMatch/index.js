@@ -7,10 +7,14 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
 
-  const { name, type, subMode, minPlayers, maxPlayers, startTime, endTime, location, locationDetail, courtNumber } = event;
+  const { name, type, subMode, minPlayers, maxPlayers, startTime, endTime, location, locationDetail, courtNumber, teamCount, teamNames } = event;
 
   if (!name || !type || !subMode) {
     return { success: false, message: '缺少必要参数' };
+  }
+
+  if (subMode === 'team-turn' && (!teamCount || teamCount < 2 || teamCount > 4)) {
+    return { success: false, message: '小队转模式下队伍数量需为 2、3 或 4' };
   }
 
   try {
@@ -73,6 +77,17 @@ exports.main = async (event, context) => {
       };
     }
     if (courtNumber) matchData.courtNumber = String(courtNumber).trim();
+
+    if (subMode === 'team-turn') {
+      const tc = Math.min(4, Math.max(2, parseInt(teamCount, 10) || 2));
+      const defaults = ['队伍A', '队伍B', '队伍C', '队伍D'].slice(0, tc);
+      const names = Array.isArray(teamNames) && teamNames.length >= tc
+        ? teamNames.slice(0, tc).map(s => (s && String(s).trim()) || '').map((s, i) => s || defaults[i])
+        : defaults;
+      matchData.teamCount = tc;
+      matchData.teamNames = names;
+      matchData.teamPlayers = Array(tc).fill(null).map((_, i) => (i === 0 ? [userId] : []));
+    }
 
     const res = await db.collection('matches').add({ data: matchData });
     return { success: true, matchId: res._id };

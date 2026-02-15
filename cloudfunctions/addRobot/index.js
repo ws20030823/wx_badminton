@@ -6,7 +6,7 @@ const db = cloud.database();
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
-  const { matchId, count = 1 } = event;
+  const { matchId, count = 1, teamIndex } = event;
 
   if (!matchId) {
     return { success: false, message: '缺少比赛ID' };
@@ -23,6 +23,11 @@ exports.main = async (event, context) => {
     const userId = userRes.data && userRes.data[0] ? userRes.data[0]._id : null;
     if (match.creatorId !== userId) {
       return { success: false, message: '仅创建者可添加机器人' };
+    }
+
+    const isTeamTurn = match.subMode === 'team-turn' && match.teamPlayers && Array.isArray(match.teamPlayers);
+    if (isTeamTurn && (teamIndex == null || teamIndex < 0 || teamIndex >= (match.teamCount || match.teamPlayers.length))) {
+      return { success: false, message: '请选择要加入的队伍' };
     }
 
     const players = match.players || [];
@@ -53,8 +58,18 @@ exports.main = async (event, context) => {
     }
 
     const updatedPlayers = [...players, ...newPlayerIds];
+    const updateData = { players: updatedPlayers };
+
+    if (isTeamTurn) {
+      const ti = parseInt(teamIndex, 10);
+      const teamPlayers = (match.teamPlayers || []).map(arr => [...(arr || [])]);
+      if (!teamPlayers[ti]) teamPlayers[ti] = [];
+      teamPlayers[ti].push(...newPlayerIds);
+      updateData.teamPlayers = teamPlayers;
+    }
+
     await db.collection('matches').doc(matchId).update({
-      data: { players: updatedPlayers }
+      data: updateData
     });
 
     return { success: true, added: toAdd };

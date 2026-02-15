@@ -29,14 +29,46 @@
   <view class="tab-content" wx:if="{{activeTab === 0}}">
     <view class="card">
       <view class="section-title">报名列表</view>
-      <view class="player-list" wx:if="{{playerList.length > 0}}">
-        <view class="player-item" wx:for="{{playerList}}" wx:key="_id">
-          <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
-          <view class="avatar avatar-placeholder" wx:else></view>
-          <text>{{item.nickName || '未知'}}</text>
+
+      <block wx:if="{{match.subMode === 'team-turn' && teamList.length > 0}}">
+        <view class="team-cards">
+          <view
+            class="team-card {{myTeamIndex === item.teamIndex ? 'my-team' : ''}}"
+            wx:for="{{teamList}}"
+            wx:key="teamIndex"
+          >
+            <view class="team-card-header">
+              <text class="team-label">{{item.teamLabel}}</text>
+              <text class="team-count">({{item.players ? item.players.length : 0}}人)</text>
+              <text class="my-team-tag" wx:if="{{myTeamIndex === item.teamIndex}}">我的队伍</text>
+            </view>
+            <view class="team-players" wx:if="{{item.players && item.players.length > 0}}">
+              <view class="player-item" wx:for="{{item.players}}" wx:for-item="p" wx:key="_id">
+                <image class="avatar" src="{{p.avatarUrl}}" mode="aspectFill" wx:if="{{p.avatarUrl}}"></image>
+                <view class="avatar avatar-placeholder" wx:else></view>
+                <text>{{p.nickName || '未知'}}</text>
+              </view>
+            </view>
+            <view class="empty-tip" wx:else>暂无成员</view>
+            <button
+              wx:if="{{hasJoined && myTeamIndex === item.teamIndex && match.status === 'registering' && teamList.length > 1}}"
+              class="btn-switch-team"
+              bindtap="onSwitchTeamTap"
+            >切换队伍</button>
+          </view>
         </view>
-      </view>
-      <view class="empty-tip" wx:else>暂无报名</view>
+      </block>
+
+      <block wx:else>
+        <view class="player-list" wx:if="{{playerList.length > 0}}">
+          <view class="player-item" wx:for="{{playerList}}" wx:key="_id">
+            <image class="avatar" src="{{item.avatarUrl}}" mode="aspectFill" wx:if="{{item.avatarUrl}}"></image>
+            <view class="avatar avatar-placeholder" wx:else></view>
+            <text>{{item.nickName || '未知'}}</text>
+          </view>
+        </view>
+        <view class="empty-tip" wx:else>暂无报名</view>
+      </block>
     </view>
 
     <view class="actions">

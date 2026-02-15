@@ -8,6 +8,8 @@ Page({
     isCreator: false,
     hasJoined: false,
     playerList: [],
+    teamList: [],
+    myTeamIndex: -1,
     userMap: {},
     activeTab: 0,
     rankings: [],
@@ -39,12 +41,14 @@ Page({
       const result = res.result;
 
       if (result && result.success) {
-        const { match, isCreator, hasJoined, playerList, userMap, rankings, matchups } = result;
+        const { match, isCreator, hasJoined, playerList, teamList, myTeamIndex, userMap, rankings, matchups } = result;
         this.setData({
           match,
           isCreator,
           hasJoined,
           playerList,
+          teamList: teamList || [],
+          myTeamIndex: myTeamIndex != null ? myTeamIndex : -1,
           userMap: userMap || {},
           rankings,
           matchups
@@ -67,11 +71,35 @@ Page({
       return;
     }
 
+    const { match, teamList } = this.data;
+    const isTeamTurn = match && match.subMode === 'team-turn' && teamList && teamList.length > 0;
+
+    if (isTeamTurn) {
+      const itemList = teamList.map(t => `${t.teamLabel} (${(t.players || []).length}人)`);
+      wx.showActionSheet({
+        itemList,
+        success: (res) => {
+          const teamIndex = res.tapIndex;
+          this.doJoinMatch(teamIndex);
+        },
+        fail: () => {}
+      });
+    } else {
+      this.doJoinMatch();
+    }
+  },
+
+  async doJoinMatch(teamIndex) {
+    const payload = { matchId: this.data.matchId };
+    if (teamIndex != null) payload.teamIndex = teamIndex;
+
     try {
+      wx.showLoading({ title: '报名中...' });
       const res = await wx.cloud.callFunction({
         name: 'joinMatch',
-        data: { matchId: this.data.matchId }
+        data: payload
       });
+      wx.hideLoading();
       const result = res.result;
       if (result && result.success) {
         wx.showToast({ title: '报名成功', icon: 'success' });
@@ -80,18 +108,80 @@ Page({
         wx.showToast({ title: result?.message || '报名失败', icon: 'none' });
       }
     } catch (err) {
+      wx.hideLoading();
       wx.showToast({ title: '报名失败', icon: 'none' });
     }
   },
 
-  async onAddRobotTap() {
+  onSwitchTeamTap() {
+    const { teamList, myTeamIndex } = this.data;
+    if (!teamList || teamList.length < 2 || myTeamIndex < 0) return;
+
+    const options = teamList
+      .map((t, i) => ({ index: i, label: `${t.teamLabel} (${(t.players || []).length}人)` }))
+      .filter(t => t.index !== myTeamIndex);
+
+    wx.showActionSheet({
+      itemList: options.map(o => o.label),
+      success: (res) => {
+        const toTeamIndex = options[res.tapIndex].index;
+        this.doSwitchTeam(toTeamIndex);
+      }
+    });
+  },
+
+  async doSwitchTeam(toTeamIndex) {
+    try {
+      wx.showLoading({ title: '切换中...' });
+      const res = await wx.cloud.callFunction({
+        name: 'switchTeam',
+        data: { matchId: this.data.matchId, toTeamIndex }
+      });
+      wx.hideLoading();
+      const result = res.result;
+      if (result && result.success) {
+        wx.showToast({ title: '切换成功', icon: 'success' });
+        this.loadMatch();
+      } else {
+        wx.showToast({ title: result?.message || '切换失败', icon: 'none' });
+      }
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '切换失败', icon: 'none' });
+    }
+  },
+
+  onAddRobotTap() {
     if (!this.data.isCreator) return;
 
+    const { match, teamList } = this.data;
+    const isTeamTurn = match && match.subMode === 'team-turn' && teamList && teamList.length > 0;
+
+    if (isTeamTurn) {
+      const itemList = teamList.map(t => `${t.teamLabel} (${(t.players || []).length}人)`);
+      wx.showActionSheet({
+        itemList,
+        success: (res) => {
+          this.doAddRobot(res.tapIndex);
+        },
+        fail: () => {}
+      });
+    } else {
+      this.doAddRobot();
+    }
+  },
+
+  async doAddRobot(teamIndex) {
+    const payload = { matchId: this.data.matchId, count: 1 };
+    if (teamIndex != null) payload.teamIndex = teamIndex;
+
     try {
+      wx.showLoading({ title: '添加中...' });
       const res = await wx.cloud.callFunction({
         name: 'addRobot',
-        data: { matchId: this.data.matchId, count: 1 }
+        data: payload
       });
+      wx.hideLoading();
       const result = res.result;
       if (result && result.success) {
         wx.showToast({ title: `已添加 ${result.added} 个机器人`, icon: 'success' });
@@ -100,6 +190,7 @@ Page({
         wx.showToast({ title: result?.message || '添加失败', icon: 'none' });
       }
     } catch (err) {
+      wx.hideLoading();
       wx.showToast({ title: '添加失败', icon: 'none' });
     }
   },

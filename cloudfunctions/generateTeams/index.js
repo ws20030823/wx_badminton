@@ -70,6 +70,30 @@ function teamTurn(players, groupSize = 3) {
   return { groups };
 }
 
+// 小队转：按预设队伍分配生成组内对局
+function teamTurnFromTeams(teamPlayers) {
+  const groups = [];
+  for (let i = 0; i < teamPlayers.length; i++) {
+    const groupPlayers = teamPlayers[i] || [];
+    const matches = [];
+    for (let j = 0; j < groupPlayers.length; j++) {
+      for (let k = j + 1; k < groupPlayers.length; k++) {
+        matches.push({
+          player1: groupPlayers[j],
+          player2: groupPlayers[k],
+          result: null
+        });
+      }
+    }
+    groups.push({
+      groupId: String.fromCharCode(65 + i),
+      players: groupPlayers,
+      matches
+    });
+  }
+  return { groups };
+}
+
 function knockout(players) {
   const shuffled = [...players].sort(() => Math.random() - 0.5);
   const round1Matches = [];
@@ -241,7 +265,13 @@ exports.main = async (event, context) => {
       const maxRounds = desiredRounds(players.length);
       teams = roundRobinLimited(players, maxRounds);
     } else if (subMode === 'team-turn') {
-      teams = teamTurn(players);
+      const tp = match.teamPlayers;
+      const tc = match.teamCount || (tp && tp.length);
+      if (tp && Array.isArray(tp) && tp.length === tc) {
+        teams = teamTurnFromTeams(tp);
+      } else {
+        teams = teamTurn(players);
+      }
     } else if (subMode === 'knockout') {
       teams = knockout(players);
     } else {

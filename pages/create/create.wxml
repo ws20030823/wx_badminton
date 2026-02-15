@@ -45,6 +45,45 @@
       </view>
     </view>
 
+    <block wx:if="{{subMode === 'team-turn'}}">
+      <view class="form-item">
+        <text class="label">队伍数量</text>
+        <view class="team-count-picker">
+          <view
+            class="team-count-opt {{teamCount === 2 ? 'active' : ''}}"
+            data-count="2"
+            bindtap="onTeamCountChange"
+          >2队</view>
+          <view
+            class="team-count-opt {{teamCount === 3 ? 'active' : ''}}"
+            data-count="3"
+            bindtap="onTeamCountChange"
+          >3队</view>
+          <view
+            class="team-count-opt {{teamCount === 4 ? 'active' : ''}}"
+            data-count="4"
+            bindtap="onTeamCountChange"
+          >4队</view>
+        </view>
+      </view>
+      <view class="form-item team-names">
+        <text class="label sub">队伍名称（可选）</text>
+        <view class="team-name-inputs" wx:for="{{teamNames}}" wx:key="index">
+          <view class="input-wrap flex-1">
+            <text class="input-icon">🏷</text>
+            <input
+              class="input"
+              placeholder="例如: 红队"
+              placeholder-class="placeholder"
+              value="{{item}}"
+              data-index="{{index}}"
+              bindinput="onTeamNameInput"
+            />
+          </view>
+        </view>
+      </view>
+    </block>
+
     <view class="form-item">
       <text class="label">开始时间</text>
       <view class="datetime-row">
