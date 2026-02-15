@@ -1,5 +1,5 @@
 {
-  "description": "複製此檔案為 project.private.config.json，並填入你的 appid",
+  "description": "复制此文件为 project.private.config.json，并填入你的 appid",
   "appid": "YOUR_APPID",
   "projectname": "wx-badminton",
   "setting": {

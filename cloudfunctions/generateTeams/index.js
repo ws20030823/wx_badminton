@@ -1,4 +1,4 @@
-// 雲函數：生成組隊
+// 云函数：生成组队
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
@@ -77,20 +77,20 @@ exports.main = async (event, context) => {
   const { matchId } = event;
 
   if (!matchId) {
-    return { success: false, message: '缺少比賽ID' };
+    return { success: false, message: '缺少比赛ID' };
   }
 
   try {
     const matchRes = await db.collection('matches').doc(matchId).get();
     const match = matchRes.data;
 
-    if (!match) return { success: false, message: '比賽不存在' };
-    if (match.status !== 'registering') return { success: false, message: '比賽狀態不允許組隊' };
+    if (!match) return { success: false, message: '比赛不存在' };
+    if (match.status !== 'registering') return { success: false, message: '比赛状态不允许组队' };
 
     const userRes = await db.collection('users').where({ openid }).get();
     const userId = userRes.data && userRes.data[0] ? userRes.data[0]._id : null;
     if (match.creatorId !== userId) {
-      return { success: false, message: '僅創建者可開始組隊' };
+      return { success: false, message: '仅创建者可开始组队' };
     }
 
     const players = match.players || [];
@@ -122,6 +122,6 @@ exports.main = async (event, context) => {
     return { success: true, teams };
   } catch (err) {
     console.error('generateTeams error:', err);
-    return { success: false, message: err.message || '組隊失敗' };
+    return { success: false, message: err.message || '组队失败' };
   }
 };

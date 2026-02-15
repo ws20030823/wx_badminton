@@ -1,4 +1,4 @@
-// 雲函數：創建比賽
+// 云函数：创建比赛
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
@@ -10,11 +10,11 @@ exports.main = async (event, context) => {
   const { name, type, subMode, minPlayers, maxPlayers, time, location } = event;
 
   if (!name || !type || !subMode) {
-    return { success: false, message: '缺少必要參數' };
+    return { success: false, message: '缺少必要参数' };
   }
 
   try {
-    // 查詢或創建用戶
+    // 查询或创建用户
     let userRes = await db.collection('users').where({ openid }).get();
     let userId;
     if (userRes.data && userRes.data.length > 0) {
@@ -28,7 +28,7 @@ exports.main = async (event, context) => {
       const addRes = await db.collection('users').add({
         data: {
           openid,
-          nickName: '用戶',
+          nickName: '用户',
           avatarUrl: '',
           createdAt: db.serverDate(),
           stats: {
@@ -68,6 +68,6 @@ exports.main = async (event, context) => {
     return { success: true, matchId: res._id };
   } catch (err) {
     console.error('createMatch error:', err);
-    return { success: false, message: err.message || '創建失敗' };
+    return { success: false, message: err.message || '创建失败' };
   }
 };

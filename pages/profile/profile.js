@@ -48,7 +48,7 @@ Page({
         });
       }
     } catch (err) {
-      console.error('載入用戶統計失敗', err);
+      console.error('加载用户统计失败', err);
     }
   },
 
@@ -66,7 +66,7 @@ Page({
         } catch (e) {}
       },
       fail: (err) => {
-        wx.showToast({ title: '授權失敗', icon: 'none' });
+        wx.showToast({ title: '授权失败', icon: 'none' });
       }
     });
   }

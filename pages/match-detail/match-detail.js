@@ -1,4 +1,4 @@
-// pages/match-detail/match-detail.js - 比賽詳情
+// pages/match-detail/match-detail.js - 比赛详情
 const app = getApp();
 
 Page({
@@ -25,7 +25,7 @@ Page({
   },
 
   async loadMatch() {
-    wx.showLoading({ title: '載入中...' });
+    wx.showLoading({ title: '加载中...' });
 
     try {
       const db = wx.cloud.database();
@@ -37,7 +37,7 @@ Page({
         const isCreator = match.creatorId === userId;
         const hasJoined = match.players && match.players.includes(userId);
 
-        // 獲取報名用戶資訊
+        // 获取报名用户信息
         let playerList = [];
         if (match.players && match.players.length > 0) {
           const usersRes = await db.collection('users')
@@ -53,10 +53,10 @@ Page({
           playerList
         });
       } else {
-        wx.showToast({ title: '比賽不存在', icon: 'none' });
+        wx.showToast({ title: '比赛不存在', icon: 'none' });
       }
     } catch (err) {
-      wx.showToast({ title: '載入失敗', icon: 'none' });
+      wx.showToast({ title: '加载失败', icon: 'none' });
       console.error(err);
     } finally {
       wx.hideLoading();
@@ -66,7 +66,7 @@ Page({
   async onJoinTap() {
     const userId = app.globalData.userId;
     if (!userId) {
-      wx.showToast({ title: '請先登入', icon: 'none' });
+      wx.showToast({ title: '请先登录', icon: 'none' });
       return;
     }
 
@@ -77,13 +77,13 @@ Page({
       });
       const result = res.result;
       if (result && result.success) {
-        wx.showToast({ title: '報名成功', icon: 'success' });
+        wx.showToast({ title: '报名成功', icon: 'success' });
         this.loadMatch();
       } else {
-        wx.showToast({ title: result?.message || '報名失敗', icon: 'none' });
+        wx.showToast({ title: result?.message || '报名失败', icon: 'none' });
       }
     } catch (err) {
-      wx.showToast({ title: '報名失敗', icon: 'none' });
+      wx.showToast({ title: '报名失败', icon: 'none' });
     }
   },
 
@@ -97,18 +97,18 @@ Page({
       });
       const result = res.result;
       if (result && result.success) {
-        wx.showToast({ title: '組隊成功', icon: 'success' });
+        wx.showToast({ title: '组队成功', icon: 'success' });
         this.loadMatch();
       } else {
-        wx.showToast({ title: result?.message || '組隊失敗', icon: 'none' });
+        wx.showToast({ title: result?.message || '组队失败', icon: 'none' });
       }
     } catch (err) {
-      wx.showToast({ title: '組隊失敗', icon: 'none' });
+      wx.showToast({ title: '组队失败', icon: 'none' });
     }
   },
 
   getStatusText(status) {
-    const map = { registering: '報名中', teaming: '組隊中', playing: '進行中', finished: '已結束' };
+    const map = { registering: '报名中', teaming: '组队中', playing: '进行中', finished: '已结束' };
     return map[status] || status;
   }
 });

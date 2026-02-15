@@ -1,18 +1,18 @@
-# 微信開發者工具私有設定（含 appid、個人設定）
+# 微信开发者工具私有配置（含 appid、个人配置）
 project.private.config.json
 
 # 依賴
 node_modules/
 
-# 雲函數依賴（每個 cloudfunctions/*/ 下的 node_modules）
+# 云函数依赖（每个 cloudfunctions/*/ 下的 node_modules）
 **/node_modules/
 
-# 日誌與暫存檔
+# 日志与暂存文件
 *.log
 MiniprogramLog/
 .DS_Store
 *.tmp
 
-# 編輯器
+# 编辑器
 .vscode/
 .idea/

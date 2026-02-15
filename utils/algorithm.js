@@ -1,7 +1,7 @@
-// utils/algorithm.js - 組隊演算法工具（雲函數中也有實作，此處供前端預覽或本地計算）
+// utils/algorithm.js - 组队算法工具（云函数中也有实现，此处供前端预览或本地计算）
 
 /**
- * 單打轉 - 輪轉演算法 (Round-Robin)
+ * 单打转 - 轮转算法 (Round-Robin)
  */
 function roundRobin(players) {
   const n = players.length;
@@ -27,7 +27,7 @@ function roundRobin(players) {
 }
 
 /**
- * 小隊轉 - 分組組內對戰
+ * 小队转 - 分组组内对战
  */
 function teamTurn(players, groupSize = 3) {
   const groups = [];
@@ -55,7 +55,7 @@ function teamTurn(players, groupSize = 3) {
 }
 
 /**
- * 晉級賽 - 淘汰賽第一輪
+ * 晋级赛 - 淘汰赛第一轮
  */
 function knockout(players) {
   const shuffled = [...players].sort(() => Math.random() - 0.5);

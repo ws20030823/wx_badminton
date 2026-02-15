@@ -1,16 +1,16 @@
-<!--pages/matches/matches.wxml - 我的對戰-->
+<!--pages/matches/matches.wxml - 我的对战-->
 <view class="container">
   <view class="tabs">
     <view
       class="tab {{activeTab === 0 ? 'active' : ''}}"
       data-index="0"
       bindtap="onTabChange"
-    >我參與的</view>
+    >我参与的</view>
     <view
       class="tab {{activeTab === 1 ? 'active' : ''}}"
       data-index="1"
       bindtap="onTabChange"
-    >我創建的</view>
+    >我创建的</view>
   </view>
 
   <scroll-view
@@ -30,11 +30,11 @@
       >
         <view class="match-name">{{item.name}}</view>
         <view class="match-meta">
-          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '報名中' : item.status === 'teaming' ? '組隊中' : item.status === 'playing' ? '進行中' : '已結束'}}</text>
+          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '报名中' : item.status === 'teaming' ? '组队中' : item.status === 'playing' ? '进行中' : '已结束'}}</text>
           <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
         </view>
       </view>
-      <view class="empty-tip" wx:if="{{joinedList.length === 0}}">暫無參與的比賽</view>
+      <view class="empty-tip" wx:if="{{joinedList.length === 0}}">暂无参与的比赛</view>
     </view>
 
     <view wx:if="{{activeTab === 1}}">
@@ -47,11 +47,11 @@
       >
         <view class="match-name">{{item.name}}</view>
         <view class="match-meta">
-          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '報名中' : item.status === 'teaming' ? '組隊中' : item.status === 'playing' ? '進行中' : '已結束'}}</text>
+          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '报名中' : item.status === 'teaming' ? '组队中' : item.status === 'playing' ? '进行中' : '已结束'}}</text>
           <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
         </view>
       </view>
-      <view class="empty-tip" wx:if="{{createdList.length === 0}}">暫無創建的比賽</view>
+      <view class="empty-tip" wx:if="{{createdList.length === 0}}">暂无创建的比赛</view>
     </view>
   </scroll-view>
 </view>

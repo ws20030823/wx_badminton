@@ -1,6 +1,6 @@
-// utils/auth.js - 登入相關工具
+// utils/auth.js - 登录相关工具
 /**
- * 檢查是否已登入
+ * 检查是否已登录
  */
 function isLoggedIn() {
   const app = getApp();
@@ -13,7 +13,7 @@ function isLoggedIn() {
 function getUserProfile() {
   return new Promise((resolve, reject) => {
     wx.getUserProfile({
-      desc: '用於完善用戶資料與賽事身份識別',
+      desc: '用于完善用户资料与赛事身份识别',
       success: (res) => resolve(res.userInfo),
       fail: (err) => reject(err)
     });
@@ -21,7 +21,7 @@ function getUserProfile() {
 }
 
 /**
- * 保存用戶資訊到雲端（透過雲函數或直接寫入）
+ * 保存用户信息到云端（通过云函数或直接写入）
  */
 async function saveUserToCloud(userInfo, openid) {
   const db = wx.cloud.database();
@@ -38,7 +38,7 @@ async function saveUserToCloud(userInfo, openid) {
   const addRes = await db.collection('users').add({
     data: {
       openid,
-      nickName: nickName || '用戶',
+      nickName: nickName || '用户',
       avatarUrl: avatarUrl || '',
       createdAt: db.serverDate(),
       stats: {

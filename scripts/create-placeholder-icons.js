@@ -7,4 +7,4 @@ const png = Buffer.from(
 const names = ['home', 'home-active', 'matches', 'matches-active', 'profile', 'profile-active'];
 const imagesDir = path.join(__dirname, '..', 'images');
 names.forEach(n => fs.writeFileSync(path.join(imagesDir, n + '.png'), png));
-console.log('Created 6 placeholder PNG files in images/');
+console.log('已创建 6 个占位 PNG 文件于 images/');

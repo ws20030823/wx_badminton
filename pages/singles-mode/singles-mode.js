@@ -1,20 +1,20 @@
-// pages/singles-mode/singles-mode.js - 單打模式選擇
+// pages/singles-mode/singles-mode.js - 单打模式选择
 Page({
   data: {},
 
   onLoad() {},
 
-  // 單打轉
+  // 单打转
   onSingleTurnTap() {
     this.navigateToCreate('singles', 'single-turn');
   },
 
-  // 小隊轉
+  // 小队转
   onTeamTurnTap() {
     this.navigateToCreate('singles', 'team-turn');
   },
 
-  // 晉級賽
+  // 晋级赛
   onKnockoutTap() {
     this.navigateToCreate('singles', 'knockout');
   },

@@ -1,4 +1,4 @@
-// pages/matches/matches.js - 我的對戰
+// pages/matches/matches.js - 我的对战
 const app = getApp();
 
 Page({
@@ -28,7 +28,7 @@ Page({
       return;
     }
 
-    wx.showLoading({ title: '載入中...' });
+    wx.showLoading({ title: '加载中...' });
 
     try {
       const db = wx.cloud.database();
@@ -47,7 +47,7 @@ Page({
         createdList: createdRes.data || []
       });
     } catch (err) {
-      wx.showToast({ title: '載入失敗', icon: 'none' });
+      wx.showToast({ title: '加载失败', icon: 'none' });
     } finally {
       wx.hideLoading();
     }
@@ -65,7 +65,7 @@ Page({
   },
 
   getStatusText(status) {
-    const map = { registering: '報名中', teaming: '組隊中', playing: '進行中', finished: '已結束' };
+    const map = { registering: '报名中', teaming: '组队中', playing: '进行中', finished: '已结束' };
     return map[status] || status;
   }
 });

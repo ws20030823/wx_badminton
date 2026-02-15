@@ -1,4 +1,4 @@
-// 雲函數：加入比賽
+// 云函数：加入比赛
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
@@ -9,7 +9,7 @@ exports.main = async (event, context) => {
   const { matchId } = event;
 
   if (!matchId) {
-    return { success: false, message: '缺少比賽ID' };
+    return { success: false, message: '缺少比赛ID' };
   }
 
   try {
@@ -17,14 +17,14 @@ exports.main = async (event, context) => {
     const match = matchRes.data;
 
     if (!match) {
-      return { success: false, message: '比賽不存在' };
+      return { success: false, message: '比赛不存在' };
     }
 
     if (match.status !== 'registering') {
-      return { success: false, message: '比賽已停止報名' };
+      return { success: false, message: '比赛已停止报名' };
     }
 
-    // 查詢用戶
+    // 查询用户
     let userRes = await db.collection('users').where({ openid }).get();
     let userId;
     if (userRes.data && userRes.data.length > 0) {
@@ -33,7 +33,7 @@ exports.main = async (event, context) => {
       const addRes = await db.collection('users').add({
         data: {
           openid,
-          nickName: '用戶',
+          nickName: '用户',
           avatarUrl: '',
           createdAt: db.serverDate(),
           stats: { totalMatches: 0, createdMatches: 0, wins: 0, losses: 0, winRate: 0 }
@@ -44,11 +44,11 @@ exports.main = async (event, context) => {
 
     const players = match.players || [];
     if (players.includes(userId)) {
-      return { success: false, message: '已報名' };
+      return { success: false, message: '已报名' };
     }
 
     if (players.length >= match.maxPlayers) {
-      return { success: false, message: '人數已滿' };
+      return { success: false, message: '人数已满' };
     }
 
     players.push(userId);
@@ -60,9 +60,9 @@ exports.main = async (event, context) => {
       data: { 'stats.totalMatches': db.command.inc(1) }
     });
 
-    return { success: true, message: '報名成功' };
+    return { success: true, message: '报名成功' };
   } catch (err) {
     console.error('joinMatch error:', err);
-    return { success: false, message: err.message || '報名失敗' };
+    return { success: false, message: err.message || '报名失败' };
   }
 };

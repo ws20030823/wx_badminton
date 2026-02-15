@@ -1,12 +1,12 @@
-// pages/create/create.js - 創建比賽
+// pages/create/create.js - 创建比赛
 const app = getApp();
 
 Page({
   data: {
     type: 'singles',
     subMode: 'single-turn',
-    typeText: '單打',
-    subModeText: '單打轉',
+    typeText: '单打',
+    subModeText: '单打转',
     name: '',
     minPlayers: 4,
     maxPlayers: 8,
@@ -16,11 +16,11 @@ Page({
 
   onLoad(options) {
     const { type = 'singles', subMode = 'single-turn' } = options;
-    const typeText = type === 'singles' ? '單打' : '雙打';
+    const typeText = type === 'singles' ? '单打' : '双打';
     const subModeMap = {
-      'single-turn': '單打轉',
-      'team-turn': '小隊轉',
-      'knockout': '晉級賽'
+      'single-turn': '单打转',
+      'team-turn': '小队转',
+      'knockout': '晋级赛'
     };
     this.setData({
       type,
@@ -54,27 +54,27 @@ Page({
     const { name, type, subMode, minPlayers, maxPlayers, time, location } = this.data;
 
     if (!name || !name.trim()) {
-      wx.showToast({ title: '請輸入比賽名稱', icon: 'none' });
+      wx.showToast({ title: '请输入比赛名称', icon: 'none' });
       return;
     }
 
     if (minPlayers > maxPlayers) {
-      wx.showToast({ title: '最少人數不能大於最多人數', icon: 'none' });
+      wx.showToast({ title: '最少人数不能大于最多人数', icon: 'none' });
       return;
     }
 
     if (minPlayers < 2 || maxPlayers > 16) {
-      wx.showToast({ title: '人數範圍請設為 2-16', icon: 'none' });
+      wx.showToast({ title: '人数范围请设为 2-16', icon: 'none' });
       return;
     }
 
     const userId = app.globalData.userId;
     if (!userId) {
-      wx.showToast({ title: '請先登入', icon: 'none' });
+      wx.showToast({ title: '请先登录', icon: 'none' });
       return;
     }
 
-    wx.showLoading({ title: '創建中...' });
+    wx.showLoading({ title: '创建中...' });
 
     try {
       const res = await wx.cloud.callFunction({
@@ -93,19 +93,19 @@ Page({
       const result = res.result;
       if (result && result.success) {
         wx.hideLoading();
-        wx.showToast({ title: '創建成功', icon: 'success' });
+        wx.showToast({ title: '创建成功', icon: 'success' });
         setTimeout(() => {
           wx.redirectTo({
             url: `/pages/match-detail/match-detail?id=${result.matchId}`
           });
         }, 1500);
       } else {
-        throw new Error(result?.message || '創建失敗');
+        throw new Error(result?.message || '创建失败');
       }
     } catch (err) {
       wx.hideLoading();
       wx.showToast({
-        title: err.message || '創建失敗',
+        title: err.message || '创建失败',
         icon: 'none'
       });
     }

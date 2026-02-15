@@ -1,4 +1,4 @@
-/* pages/index/index.wxss - 首頁樣式 */
+/* pages/index/index.wxss - 首页样式 */
 .container {
   padding: 60rpx 40rpx;
 }

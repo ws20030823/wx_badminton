@@ -1,20 +1,20 @@
-// pages/doubles-mode/doubles-mode.js - 雙打模式選擇
+// pages/doubles-mode/doubles-mode.js - 双打模式选择
 Page({
   data: {},
 
   onLoad() {},
 
-  // 雙打單打轉
+  // 双打单打转
   onSingleTurnTap() {
     this.navigateToCreate('doubles', 'single-turn');
   },
 
-  // 雙打小隊轉
+  // 双打小队转
   onTeamTurnTap() {
     this.navigateToCreate('doubles', 'team-turn');
   },
 
-  // 雙打晉級賽
+  // 双打晋级赛
   onKnockoutTap() {
     this.navigateToCreate('doubles', 'knockout');
   },

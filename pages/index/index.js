@@ -1,4 +1,4 @@
-// pages/index/index.js - 首頁
+// pages/index/index.js - 首页
 Page({
   data: {},
 
@@ -10,14 +10,14 @@ Page({
     }
   },
 
-  // 點擊單打
+  // 点击单打
   onSinglesTap() {
     wx.navigateTo({
       url: '/pages/singles-mode/singles-mode'
     });
   },
 
-  // 點擊雙打
+  // 点击双打
   onDoublesTap() {
     wx.navigateTo({
       url: '/pages/doubles-mode/doubles-mode'

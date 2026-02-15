@@ -7,32 +7,32 @@
     </view>
     <view class="user-section" wx:else>
       <view class="avatar placeholder"></view>
-      <button class="login-btn" bindtap="onLoginTap">微信登入</button>
+      <button class="login-btn" bindtap="onLoginTap">微信登录</button>
     </view>
   </view>
 
   <view class="card stats-card">
-    <view class="section-title">數據統計</view>
+    <view class="section-title">数据统计</view>
     <view class="stats-grid">
       <view class="stat-item">
         <text class="stat-value">{{stats.totalMatches}}</text>
-        <text class="stat-label">參與比賽</text>
+        <text class="stat-label">参与比赛</text>
       </view>
       <view class="stat-item">
         <text class="stat-value">{{stats.createdMatches}}</text>
-        <text class="stat-label">創建比賽</text>
+        <text class="stat-label">创建比赛</text>
       </view>
       <view class="stat-item">
         <text class="stat-value">{{stats.wins}}</text>
-        <text class="stat-label">勝場</text>
+        <text class="stat-label">胜场</text>
       </view>
       <view class="stat-item">
         <text class="stat-value">{{stats.losses}}</text>
-        <text class="stat-label">負場</text>
+        <text class="stat-label">负场</text>
       </view>
       <view class="stat-item full">
         <text class="stat-value">{{stats.winRate}}%</text>
-        <text class="stat-label">勝率</text>
+        <text class="stat-label">胜率</text>
       </view>
     </view>
   </view>

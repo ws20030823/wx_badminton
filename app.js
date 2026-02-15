@@ -1,7 +1,7 @@
-// app.js - 羽毛球組隊小程序入口
+// app.js - 羽毛球组队小程序入口
 App({
   onLaunch() {
-    // 初始化雲開發環境（請替換為你的雲環境 ID）
+    // 初始化云开发环境（请替换为你的云环境 ID）
     if (wx.cloud) {
       wx.cloud.init({
         env: 'YOUR_CLOUD_ENV_ID',
@@ -9,14 +9,14 @@ App({
       });
     }
 
-    // 全域用戶資訊
+    // 全局用户信息
     this.globalData = {
       userInfo: null,
       openid: null,
       userId: null
     };
 
-    // 檢查登入狀態
+    // 检查登录状态
     this.checkLogin();
   },
 
@@ -38,7 +38,7 @@ App({
     }
   },
 
-  // 設定用戶資訊
+  // 设置用户信息
   setUserInfo(userInfo, userId) {
     this.globalData.userInfo = userInfo;
     this.globalData.userId = userId;
@@ -46,7 +46,7 @@ App({
     wx.setStorageSync('userId', userId);
   },
 
-  // 清除用戶資訊
+  // 清除用户信息
   clearUserInfo() {
     this.globalData.userInfo = null;
     this.globalData.userId = null;

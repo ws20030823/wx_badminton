@@ -11,7 +11,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "羽毛球組隊",
+    "navigationBarTitleText": "羽毛球组队",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -24,13 +24,13 @@
         "pagePath": "pages/index/index",
         "iconPath": "images/home.png",
         "selectedIconPath": "images/home-active.png",
-        "text": "首頁"
+        "text": "首页"
       },
       {
         "pagePath": "pages/matches/matches",
         "iconPath": "images/matches.png",
         "selectedIconPath": "images/matches-active.png",
-        "text": "我的對戰"
+        "text": "我的对战"
       },
       {
         "pagePath": "pages/profile/profile",
