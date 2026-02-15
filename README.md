@@ -79,6 +79,17 @@ wx_badminton/
 
 使用微信開發者工具開啟專案目錄，編譯並預覽。
 
+## 上傳至 GitHub
+
+1. 在 GitHub 建立新倉庫（建議不勾選 README）
+2. 執行：
+
+```bash
+git remote add origin https://github.com/<your-username>/wx-badminton.git
+git branch -M main
+git push -u origin main
+```
+
 ## 團隊協作
 
 - Clone 後請依上述步驟建立本地的 `project.private.config.json`（不要提交此檔）
