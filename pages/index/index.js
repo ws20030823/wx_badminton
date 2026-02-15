@@ -22,5 +22,15 @@ Page({
     wx.navigateTo({
       url: '/pages/doubles-mode/doubles-mode'
     });
+  },
+
+  onAnnouncementTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+
+  onViewAllRecords() {
+    wx.switchTab({
+      url: '/pages/matches/matches'
+    });
   }
 });

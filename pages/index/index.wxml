@@ -1,21 +1,53 @@
 <!--pages/index/index.wxml - 首页-->
-<view class="container">
-  <view class="header">
-    <text class="title">羽毛球组队</text>
-    <text class="subtitle">选择比赛模式开始约球</text>
+<view class="page">
+  <!-- 顶部蓝色区域 -->
+  <view class="header-banner">
+    <text class="main-title">羽毛球组队</text>
+    <text class="slogan">挥洒汗水,寻找你的最佳拍档</text>
   </view>
 
-  <view class="mode-cards">
-    <view class="mode-card" bindtap="onSinglesTap">
-      <view class="card-icon">🏸</view>
-      <text class="card-title">单打</text>
-      <text class="card-desc">单打转 / 小队转 / 晋级赛</text>
-    </view>
+  <!-- 最新公告 -->
+  <view class="announcement-card" bindtap="onAnnouncementTap">
+    <text class="announcement-label">最新公告</text>
+    <text class="announcement-title">本周六俱乐部友谊赛</text>
+    <text class="announcement-hint">点击查看报名详情及分组</text>
+  </view>
 
-    <view class="mode-card" bindtap="onDoublesTap">
-      <view class="card-icon">👥</view>
-      <text class="card-title">双打</text>
-      <text class="card-desc">双打组队比赛模式</text>
+  <!-- 选择比赛模式 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-bar"></view>
+      <text class="section-title">选择比赛模式</text>
+    </view>
+    <view class="mode-row">
+      <view class="mode-card mode-singles" bindtap="onSinglesTap">
+        <view class="mode-icon mode-icon-singles">🏸</view>
+        <text class="mode-card-title">单打比赛</text>
+        <text class="mode-card-desc">1v1 SOLO 对决</text>
+        <text class="mode-arrow">></text>
+      </view>
+      <view class="mode-card mode-doubles" bindtap="onDoublesTap">
+        <view class="mode-icon mode-icon-doubles">👥</view>
+        <text class="mode-card-title">双打/混双</text>
+        <text class="mode-card-desc">2v2 默契配合</text>
+        <text class="mode-arrow">></text>
+      </view>
     </view>
   </view>
+
+  <!-- 最近战绩 -->
+  <view class="section">
+    <view class="section-header section-header-row">
+      <view class="section-left">
+        <view class="section-bar"></view>
+        <text class="section-title">最近战绩</text>
+      </view>
+      <text class="section-link" bindtap="onViewAllRecords">查看全部 ></text>
+    </view>
+    <view class="record-card">
+      <text class="record-empty">本周暂无比赛记录,快去发起挑战吧!</text>
+    </view>
+  </view>
+
+  <view class="page-bottom"></view>
 </view>

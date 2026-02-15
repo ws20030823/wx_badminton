@@ -1,39 +1,87 @@
 <!--pages/profile/profile.wxml - 我的-->
-<view class="container">
-  <view class="card profile-card">
-    <view class="user-section" wx:if="{{userInfo}}">
-      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
-      <text class="nickname">{{userInfo.nickName}}</text>
-    </view>
-    <view class="user-section" wx:else>
+<view class="page">
+  <!-- 未登录：头像 + 未登录 + 登录按钮 -->
+  <view class="user-banner" wx:if="{{!userInfo}}">
+    <view class="unlogin-row">
       <view class="avatar placeholder"></view>
-      <button class="login-btn" bindtap="onLoginTap">微信登录</button>
+      <text class="unlogin-text">未登录</text>
+      <button class="login-btn-inline" bindtap="onLoginTap">登录</button>
     </view>
   </view>
 
-  <view class="card stats-card">
-    <view class="section-title">数据统计</view>
-    <view class="stats-grid">
-      <view class="stat-item">
-        <text class="stat-value">{{stats.totalMatches}}</text>
-        <text class="stat-label">参与比赛</text>
+  <!-- 已登录：完整用户卡片 -->
+  <view class="user-banner" wx:else>
+    <view class="user-row">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" wx:if="{{userInfo.avatarUrl}}"></image>
+      <view class="avatar placeholder" wx:else></view>
+      <view class="user-info">
+        <text class="nickname">{{userInfo.nickName || '微信用户'}}</text>
+        <text class="user-id">ID: {{userIdShort || '---'}}</text>
       </view>
-      <view class="stat-item">
-        <text class="stat-value">{{stats.createdMatches}}</text>
-        <text class="stat-label">创建比赛</text>
+    </view>
+    <view class="stats-row">
+      <view class="stat">
+        <text class="stat-num">{{stats.totalMatches || 0}}</text>
+        <text class="stat-name">总场次</text>
       </view>
-      <view class="stat-item">
-        <text class="stat-value">{{stats.wins}}</text>
-        <text class="stat-label">胜场</text>
+      <view class="stat-divider"></view>
+      <view class="stat">
+        <text class="stat-num">{{stats.wins || 0}}</text>
+        <text class="stat-name">胜场</text>
       </view>
-      <view class="stat-item">
-        <text class="stat-value">{{stats.losses}}</text>
-        <text class="stat-label">负场</text>
+      <view class="stat-divider"></view>
+      <view class="stat">
+        <text class="stat-num">{{stats.losses || 0}}</text>
+        <text class="stat-name">负场</text>
       </view>
-      <view class="stat-item full">
-        <text class="stat-value">{{stats.winRate}}%</text>
-        <text class="stat-label">胜率</text>
+    </view>
+    <view class="level-row" bindtap="onLevelTap">
+      <text class="level-icon">🏆</text>
+      <text class="level-text">{{levelText}}</text>
+      <text class="level-link">等级详情 ></text>
+    </view>
+  </view>
+
+  <!-- 已登录时显示：我的服务 -->
+  <view class="card service-card" wx:if="{{userInfo}}">
+    <text class="card-title">我的服务</text>
+    <view class="service-grid">
+      <view class="service-item" bindtap="onRecordTap">
+        <text class="service-icon">📊</text>
+        <text class="service-name">详细战绩</text>
+      </view>
+      <view class="service-item" bindtap="onMatchesTap">
+        <text class="service-icon">🏆</text>
+        <text class="service-name">比赛记录</text>
+      </view>
+      <view class="service-item" bindtap="onFeedbackTap">
+        <text class="service-icon">✉</text>
+        <text class="service-name">意见反馈</text>
       </view>
     </view>
   </view>
+
+  <!-- 更多功能 -->
+  <view class="card more-card" wx:if="{{userInfo}}">
+    <text class="card-title">更多功能</text>
+    <view class="more-list">
+      <view class="more-item" bindtap="onPrivacyTap">
+        <text class="more-icon">🔒</text>
+        <text class="more-name">隐私设置</text>
+        <text class="more-arrow">></text>
+      </view>
+      <view class="more-item" bindtap="onAboutTap">
+        <text class="more-icon">ℹ</text>
+        <text class="more-name">关于我们</text>
+        <text class="more-arrow">></text>
+      </view>
+      <view class="more-item logout" bindtap="onLogoutTap">
+        <text class="more-icon">🚪</text>
+        <text class="more-name">退出登录</text>
+        <text class="more-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-bottom"></view>
 </view>

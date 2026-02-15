@@ -1,36 +1,42 @@
 <!--pages/create/create.wxml - 创建比赛-->
-<view class="container">
-  <view class="form-card card">
-    <view class="form-item">
-      <text class="label">比赛名称</text>
-      <input
-        class="input"
-        placeholder="请输入比赛名称"
-        value="{{name}}"
-        bindinput="onNameInput"
-      />
-    </view>
-
+<view class="page">
+  <view class="form-wrapper">
     <view class="form-item">
       <text class="label">比赛模式</text>
-      <text class="readonly">{{typeText}} - {{subModeText}}</text>
+      <view class="readonly-card">
+        <text class="readonly-icon">↻</text>
+        <text class="readonly-text">{{typeText}} - {{subModeText}}</text>
+        <text class="readonly-hint">不可更改</text>
+      </view>
     </view>
 
-    <view class="form-row">
-      <view class="form-item half">
-        <text class="label">最少人数</text>
+    <view class="form-item">
+      <text class="label">比赛名称*</text>
+      <view class="input-wrap">
+        <text class="input-icon">✎</text>
         <input
           class="input"
+          placeholder="例如: 周六快乐羽毛球"
+          placeholder-class="placeholder"
+          value="{{name}}"
+          bindinput="onNameInput"
+        />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">人数限制 (最少~最多)</text>
+      <view class="number-row">
+        <input
+          class="number-input"
           type="number"
           placeholder="4"
           value="{{minPlayers}}"
           bindinput="onMinPlayersInput"
         />
-      </view>
-      <view class="form-item half">
-        <text class="label">最多人数</text>
+        <text class="number-sep">~</text>
         <input
-          class="input"
+          class="number-input"
           type="number"
           placeholder="8"
           value="{{maxPlayers}}"
@@ -40,22 +46,30 @@
     </view>
 
     <view class="form-item">
-      <text class="label">比赛时间（选填）</text>
+      <text class="label">比赛时间</text>
       <picker mode="date" value="{{time}}" bindchange="onTimeChange">
-        <view class="picker">{{time || '选择日期'}}</view>
+        <view class="picker-wrap">
+          <text class="picker-icon">📅</text>
+          <text class="picker-text {{time ? '' : 'placeholder'}}">{{time || '请选择比赛时间 (可选)'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
       </picker>
     </view>
 
     <view class="form-item">
-      <text class="label">比赛地点（选填）</text>
-      <input
-        class="input"
-        placeholder="请输入地点"
-        value="{{location}}"
-        bindinput="onLocationInput"
-      />
+      <text class="label">比赛地点</text>
+      <view class="input-wrap">
+        <text class="input-icon pin">📍</text>
+        <input
+          class="input"
+          placeholder="请输入场馆名称 (可选)"
+          placeholder-class="placeholder"
+          value="{{location}}"
+          bindinput="onLocationInput"
+        />
+      </view>
     </view>
 
-    <button class="btn-primary submit-btn" bindtap="onSubmit">创建比赛</button>
+    <button class="submit-btn" bindtap="onSubmit">立即创建</button>
   </view>
 </view>

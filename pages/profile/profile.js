@@ -4,6 +4,8 @@ const app = getApp();
 Page({
   data: {
     userInfo: null,
+    userIdShort: '',
+    levelText: '羽球新手 Lv.1',
     stats: {
       totalMatches: 0,
       createdMatches: 0,
@@ -26,7 +28,8 @@ Page({
     const userInfo = app.globalData.userInfo;
     const userId = app.globalData.userId;
 
-    this.setData({ userInfo });
+    const short = userId ? String(userId).slice(-4) : '';
+    this.setData({ userInfo, userIdShort: short || '---' });
 
     if (!userId) {
       return;
@@ -67,6 +70,38 @@ Page({
       },
       fail: (err) => {
         wx.showToast({ title: '授权失败', icon: 'none' });
+      }
+    });
+  },
+
+  onLevelTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onRecordTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onMatchesTap() {
+    wx.switchTab({ url: '/pages/matches/matches' });
+  },
+  onFeedbackTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onPrivacyTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onAboutTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onLogoutTap() {
+    wx.showModal({
+      title: '提示',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          app.clearUserInfo();
+          this.setData({ userInfo: null, stats: { totalMatches: 0, createdMatches: 0, wins: 0, losses: 0, winRate: 0 } });
+          wx.showToast({ title: '已退出', icon: 'none' });
+        }
       }
     });
   }

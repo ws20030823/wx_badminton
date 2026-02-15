@@ -1,6 +1,6 @@
 <!--pages/matches/matches.wxml - 我的对战-->
-<view class="container">
-  <view class="tabs">
+<view class="page">
+  <view class="tabs-wrap">
     <view
       class="tab {{activeTab === 0 ? 'active' : ''}}"
       data-index="0"
@@ -11,7 +11,9 @@
       data-index="1"
       bindtap="onTabChange"
     >我创建的</view>
+    <view class="tab-underline" style="left: {{activeTab === 0 ? '15%' : '55%'}}"></view>
   </view>
+  <text class="tab-hint">选择创建的和参加的比赛</text>
 
   <scroll-view
     scroll-y
@@ -20,35 +22,61 @@
     refresher-enabled
     bindrefresherrefresh="onPullDownRefresh"
   >
-    <view wx:if="{{activeTab === 0}}">
+    <view wx:if="{{activeTab === 0}}" class="list-inner">
       <view
-        class="card match-card"
+        class="match-card"
         wx:for="{{joinedList}}"
         wx:key="_id"
         data-id="{{item._id}}"
         bindtap="onMatchTap"
       >
-        <view class="match-name">{{item.name}}</view>
-        <view class="match-meta">
-          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '报名中' : item.status === 'teaming' ? '组队中' : item.status === 'playing' ? '进行中' : '已结束'}}</text>
-          <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
+        <view class="card-date">
+          <text class="date-month">{{item.dateMonth}}</text>
+          <text class="date-day">{{item.dateDay}}</text>
+        </view>
+        <view class="card-content">
+          <view class="card-top">
+            <text class="match-name">{{item.name}}</text>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="card-info">
+            <text class="info-item">🕐 {{item.timeText}}</text>
+            <text class="info-item">📍 {{item.locationText}}</text>
+          </view>
+          <text class="mode-tag">{{item.typeText}} - {{item.subModeText}}</text>
+          <view class="result-link" wx:if="{{item.status === 'finished'}}" bindtap="onMatchTap" data-id="{{item._id}}">
+            查看对战结果 >
+          </view>
         </view>
       </view>
       <view class="empty-tip" wx:if="{{joinedList.length === 0}}">暂无参与的比赛</view>
     </view>
 
-    <view wx:if="{{activeTab === 1}}">
+    <view wx:if="{{activeTab === 1}}" class="list-inner">
       <view
-        class="card match-card"
+        class="match-card"
         wx:for="{{createdList}}"
         wx:key="_id"
         data-id="{{item._id}}"
         bindtap="onMatchTap"
       >
-        <view class="match-name">{{item.name}}</view>
-        <view class="match-meta">
-          <text class="status-tag status-{{item.status}}">{{item.status === 'registering' ? '报名中' : item.status === 'teaming' ? '组队中' : item.status === 'playing' ? '进行中' : '已结束'}}</text>
-          <text class="count">{{item.players ? item.players.length : 0}}/{{item.maxPlayers}}人</text>
+        <view class="card-date">
+          <text class="date-month">{{item.dateMonth}}</text>
+          <text class="date-day">{{item.dateDay}}</text>
+        </view>
+        <view class="card-content">
+          <view class="card-top">
+            <text class="match-name">{{item.name}}</text>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="card-info">
+            <text class="info-item">🕐 {{item.timeText}}</text>
+            <text class="info-item">📍 {{item.locationText}}</text>
+          </view>
+          <text class="mode-tag">{{item.typeText}} - {{item.subModeText}}</text>
+          <view class="result-link" wx:if="{{item.status === 'finished'}}" bindtap="onMatchTap" data-id="{{item._id}}">
+            查看对战结果 >
+          </view>
         </view>
       </view>
       <view class="empty-tip" wx:if="{{createdList.length === 0}}">暂无创建的比赛</view>

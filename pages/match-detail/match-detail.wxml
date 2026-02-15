@@ -1,4 +1,4 @@
-<!--pages/match-detail/match-detail.wxml - 比賽詳情-->
+<!--pages/match-detail/match-detail.wxml - 比赛详情-->
 <view class="container" wx:if="{{match}}">
   <view class="card match-info">
     <view class="match-name">{{match.name}}</view>

@@ -1,21 +1,57 @@
-<!--pages/singles-mode/singles-mode.wxml - 單打模式選擇-->
-<view class="container">
-  <view class="page-title">选择单打模式</view>
+<!--pages/singles-mode/singles-mode.wxml - 单打模式选择-->
+<view class="page">
+  <!-- 蓝色渐变头部 -->
+  <view class="mode-header">
+    <text class="mode-label">当前模式</text>
+    <text class="mode-title">单打比赛</text>
+  </view>
 
-  <view class="mode-list">
+  <view class="content">
     <view class="mode-item" bindtap="onSingleTurnTap">
-      <text class="mode-name">单打转</text>
-      <text class="mode-desc">轮转对战，每人场数相同</text>
+      <view class="mode-icon-wrap icon-blue">
+        <text class="icon-text">↻</text>
+      </view>
+      <view class="mode-content">
+        <view class="mode-top">
+          <text class="mode-name">单打转</text>
+          <text class="mode-tag tag-rec">推荐</text>
+        </view>
+        <text class="mode-desc">轮转配对机制,确保每个人都能公平上场。</text>
+      </view>
+      <text class="item-arrow">></text>
     </view>
 
     <view class="mode-item" bindtap="onTeamTurnTap">
-      <text class="mode-name">小队转</text>
-      <text class="mode-desc">分组对战，组内循环</text>
+      <view class="mode-icon-wrap icon-green">
+        <text class="icon-text">👥</text>
+      </view>
+      <view class="mode-content">
+        <view class="mode-top">
+          <text class="mode-name">小队转</text>
+          <text class="mode-tag tag-fun">娱乐</text>
+        </view>
+        <text class="mode-desc">分组轮转,组内完全配对,适合朋友聚会。</text>
+      </view>
+      <text class="item-arrow">></text>
     </view>
 
     <view class="mode-item" bindtap="onKnockoutTap">
-      <text class="mode-name">晋级赛</text>
-      <text class="mode-desc">淘汰赛制，胜者晋级</text>
+      <view class="mode-icon-wrap icon-gold">
+        <text class="icon-text">🏆</text>
+      </view>
+      <view class="mode-content">
+        <view class="mode-top">
+          <text class="mode-name">晋级赛</text>
+          <text class="mode-tag tag-comp">竞技</text>
+        </view>
+        <text class="mode-desc">残酷的淘汰赛制,胜者为王,决出最终排名。</text>
+      </view>
+      <text class="item-arrow">></text>
+    </view>
+
+    <view class="hint-bar">
+      <text class="hint-icon">📌</text>
+      <text class="hint-text">点击上方卡片选择具体规则</text>
     </view>
   </view>
 </view>
