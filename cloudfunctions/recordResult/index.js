@@ -55,14 +55,52 @@ exports.main = async (event, context) => {
     if (typeof score2 === 'number') resultEntry.score2 = score2;
     results[key] = resultEntry;
 
-    await db.collection('matches').doc(matchId).update({
-      data: {
-        results,
-        status: 'playing'
+    let totalMatchups = 0;
+    const teams = match.teams || {};
+    if (teams.rounds && Array.isArray(teams.rounds)) {
+      teams.rounds.forEach(r => {
+        totalMatchups += (r.matches || []).length;
+      });
+    }
+    if (teams.groups && Array.isArray(teams.groups)) {
+      teams.groups.forEach(g => {
+        totalMatchups += (g.matches || []).length;
+      });
+    }
+
+    let isAllDone = totalMatchups > 0 && Object.keys(results).length >= totalMatchups;
+    if (isAllDone) {
+      const expectedKeys = [];
+      if (teams.rounds && Array.isArray(teams.rounds)) {
+        teams.rounds.forEach(r => {
+          (r.matches || []).forEach((m, mi) => {
+            expectedKeys.push('r' + r.round + '-m' + (mi + 1));
+          });
+        });
       }
+      if (teams.groups && Array.isArray(teams.groups)) {
+        teams.groups.forEach(g => {
+          (g.matches || []).forEach((m, mi) => {
+            expectedKeys.push('g' + g.groupId + '-m' + (mi + 1));
+          });
+        });
+      }
+      isAllDone = expectedKeys.length > 0 && expectedKeys.every(k => results[k] && results[k].winner);
+    }
+
+    const updateData = { results };
+    if (isAllDone) {
+      updateData.status = 'finished';
+      updateData.finishedAt = db.serverDate();
+    } else {
+      updateData.status = 'playing';
+    }
+
+    await db.collection('matches').doc(matchId).update({
+      data: updateData
     });
 
-    return { success: true, message: '结果已保存' };
+    return { success: true, message: isAllDone ? '比赛已结束' : '结果已保存' };
   } catch (err) {
     console.error('recordResult error:', err);
     return { success: false, message: err.message || '记录失败' };

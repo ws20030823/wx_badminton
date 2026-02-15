@@ -161,8 +161,65 @@
 .record-card {
   background: #fff;
   border-radius: 20rpx;
-  padding: 48rpx;
+  padding: 32rpx;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background: #fafafa;
+  border-radius: 16rpx;
+}
+
+.record-item:active {
+  opacity: 0.9;
+}
+
+.record-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.record-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-meta {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-stats {
+  flex-shrink: 0;
+  margin-left: 24rpx;
+}
+
+.stat-wins {
+  font-size: 26rpx;
+  color: #2e7d32;
+  font-weight: 500;
+  margin-right: 16rpx;
+}
+
+.stat-losses {
+  font-size: 26rpx;
+  color: #999;
 }
 
 .record-empty {
@@ -170,6 +227,7 @@
   color: #999;
   text-align: center;
   display: block;
+  padding: 24rpx 0;
 }
 
 .page-bottom {

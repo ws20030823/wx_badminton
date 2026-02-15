@@ -7,12 +7,13 @@
     "pages/match-detail/match-detail",
     "pages/record-score/record-score",
     "pages/matches/matches",
+    "pages/history/history",
     "pages/profile/profile"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "羽毛球组",
+    "navigationBarTitleText": "羽毛球组队",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -31,7 +32,7 @@
         "pagePath": "pages/matches/matches",
         "iconPath": "images/matches.png",
         "selectedIconPath": "images/matches-active.png",
-        "text": "我的对战"
+        "text": "对战"
       },
       {
         "pagePath": "pages/profile/profile",

@@ -1,0 +1,36 @@
+<!--pages/history/history.wxml - 历史战绩-->
+<view class="page">
+  <scroll-view
+    scroll-y
+    class="list-area"
+    enable-back-to-top
+    refresher-enabled
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    <view class="list-inner">
+      <view
+        class="history-card"
+        wx:for="{{historyList}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onMatchTap"
+      >
+        <view class="card-header">
+          <text class="match-name">{{item.name}}</text>
+          <view class="mode-tag">{{item.typeText}} - {{item.subModeText}}</view>
+        </view>
+        <view class="card-info">
+          <text class="info-item">🕐 {{item.dateStr}}</text>
+          <text class="info-item" wx:if="{{item.location}}">📍 {{item.location}}</text>
+        </view>
+        <view class="card-stats">
+          <view class="stat-badge wins">胜 {{item.myWins}}</view>
+          <view class="stat-badge losses">负 {{item.myLosses}}</view>
+          <view class="stat-badge winrate">胜率 {{item.winRate}}%</view>
+        </view>
+        <view class="card-link">查看详情 ></view>
+      </view>
+      <view class="empty-tip" wx:if="{{historyList.length === 0}}">暂无历史战绩</view>
+    </view>
+  </scroll-view>
+</view>

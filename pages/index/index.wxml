@@ -45,7 +45,25 @@
       <text class="section-link" bindtap="onViewAllRecords">查看全部 ></text>
     </view>
     <view class="record-card">
-      <text class="record-empty">本周暂无比赛记录,快去发起挑战吧!</text>
+      <view wx:if="{{recentRecords.length > 0}}" class="record-list">
+        <view
+          class="record-item"
+          wx:for="{{recentRecords}}"
+          wx:key="_id"
+          data-id="{{item._id}}"
+          bindtap="onRecordTap"
+        >
+          <view class="record-main">
+            <text class="record-name">{{item.name}}</text>
+            <text class="record-meta">{{item.dateStr}} · {{item.typeText}} - {{item.subModeText}}</text>
+          </view>
+          <view class="record-stats">
+            <text class="stat-wins">胜 {{item.myWins}}</text>
+            <text class="stat-losses">负 {{item.myLosses}}</text>
+          </view>
+        </view>
+      </view>
+      <text wx:else class="record-empty">本周暂无比赛记录,快去发起挑战吧!</text>
     </view>
   </view>
 
