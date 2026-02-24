@@ -25,25 +25,19 @@
     </view>
 
     <view class="form-item">
-      <text class="label">人数限制 (最少~最多)</text>
-      <view class="number-row">
+      <text class="label">人数</text>
+      <view class="input-wrap {{playerCountInvalid ? 'input-wrap-error' : ''}}">
+        <text class="input-icon">👥</text>
         <input
-          class="number-input"
-          type="number"
-          placeholder="4"
-          value="{{minPlayers}}"
-          bindinput="onMinPlayersInput"
-        />
-        <text class="number-sep">~</text>
-        <input
-          class="number-input"
+          class="input"
           type="number"
           placeholder="8"
-          value="{{maxPlayers}}"
-          bindinput="onMaxPlayersInput"
+          value="{{playerCount}}"
+          bindinput="onPlayerCountInput"
         />
       </view>
-      <text class="form-hint" wx:if="{{subMode === 'team-turn' && maxPlayersPerTeamHint}}">总人数建议为队伍数的倍数，每队最多 {{maxPlayersPerTeamHint}} 人</text>
+      <text class="form-hint form-hint-error" wx:if="{{playerCountInvalid}}">小队转时人数须为偶数</text>
+      <text class="form-hint" wx:if="{{subMode === 'team-turn' && maxPlayersPerTeamHint && !playerCountInvalid}}">总人数建议为队伍数的倍数，每队最多 {{maxPlayersPerTeamHint}} 人</text>
     </view>
 
     <block wx:if="{{subMode === 'team-turn'}}">

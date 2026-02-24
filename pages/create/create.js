@@ -8,8 +8,8 @@ Page({
     typeText: '单打',
     subModeText: '单打转',
     name: '',
-    minPlayers: 4,
-    maxPlayers: 8,
+    playerCount: 8,
+    playerCountInvalid: false,
     teamCount: 2,
     teamNames: ['', ''],
     maxPlayersPerTeamHint: 4,
@@ -50,15 +50,15 @@ Page({
     } else {
       teamNames = teamNames.slice(0, teamCount);
     }
-    const maxPlayers = this.data.maxPlayers || 8;
-    const maxPlayersPerTeamHint = Math.max(1, Math.floor(maxPlayers / teamCount));
+    const playerCount = this.data.playerCount || 8;
+    const maxPlayersPerTeamHint = Math.max(1, Math.floor(playerCount / teamCount));
     this.setData({ teamCount, teamNames, maxPlayersPerTeamHint });
   },
 
   updateMaxPlayersPerTeamHint() {
     if (this.data.subMode !== 'team-turn') return;
-    const { maxPlayers = 8, teamCount = 2 } = this.data;
-    this.setData({ maxPlayersPerTeamHint: Math.max(1, Math.floor(maxPlayers / teamCount)) });
+    const { playerCount = 8, teamCount = 2 } = this.data;
+    this.setData({ maxPlayersPerTeamHint: Math.max(1, Math.floor(playerCount / teamCount)) });
   },
 
   onTeamNameInput(e) {
@@ -73,13 +73,10 @@ Page({
     this.setData({ name: e.detail.value });
   },
 
-  onMinPlayersInput(e) {
-    this.setData({ minPlayers: parseInt(e.detail.value) || 4 });
-  },
-
-  onMaxPlayersInput(e) {
-    const maxPlayers = parseInt(e.detail.value) || 8;
-    this.setData({ maxPlayers }, () => this.updateMaxPlayersPerTeamHint());
+  onPlayerCountInput(e) {
+    const playerCount = parseInt(e.detail.value, 10) || 8;
+    const playerCountInvalid = this.data.subMode === 'team-turn' && (playerCount % 2 !== 0);
+    this.setData({ playerCount, playerCountInvalid }, () => this.updateMaxPlayersPerTeamHint());
   },
 
   onStartDateChange(e) {
@@ -127,7 +124,7 @@ Page({
   },
 
   async onSubmit() {
-    const { name, type, subMode, minPlayers, maxPlayers, startDate, startTimeOnly, endDate, endTimeOnly, location, locationDetail, courtNumber, teamCount, teamNames } = this.data;
+    const { name, type, subMode, playerCount, startDate, startTimeOnly, endDate, endTimeOnly, location, locationDetail, courtNumber, teamCount, teamNames } = this.data;
     const startTime = (startDate && startTimeOnly) ? `${startDate} ${startTimeOnly}` : '';
     const endTime = (endDate && endTimeOnly) ? `${endDate} ${endTimeOnly}` : '';
 
@@ -136,14 +133,22 @@ Page({
       return;
     }
 
-    if (minPlayers > maxPlayers) {
-      wx.showToast({ title: '最少人数不能大于最多人数', icon: 'none' });
+    const count = parseInt(playerCount, 10) || 8;
+    if (count < 2 || count > 16) {
+      wx.showToast({ title: '人数请设为 2-16', icon: 'none' });
       return;
     }
-
-    if (minPlayers < 2 || maxPlayers > 16) {
-      wx.showToast({ title: '人数范围请设为 2-16', icon: 'none' });
+    if (subMode === 'team-turn' && count % 2 !== 0) {
+      wx.showToast({ title: '小队转时人数须为偶数', icon: 'none' });
       return;
+    }
+    if (subMode === 'team-turn' && teamNames && teamCount >= 2) {
+      const names = (teamNames || []).slice(0, teamCount).map(s => (s && String(s).trim()) || '').filter(n => n);
+      const set = new Set(names);
+      if (names.length !== set.size) {
+        wx.showToast({ title: '队伍名称不能重复', icon: 'none' });
+        return;
+      }
     }
 
     if (startTime && endTime && new Date(endTime) <= new Date(startTime)) {
@@ -164,8 +169,8 @@ Page({
         name: name.trim(),
         type,
         subMode,
-        minPlayers,
-        maxPlayers,
+        minPlayers: count,
+        maxPlayers: count,
         startTime: startTime || undefined,
         endTime: endTime || undefined,
         location: location.trim() || undefined,
