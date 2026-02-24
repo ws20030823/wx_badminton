@@ -208,6 +208,7 @@ exports.main = async (event, context) => {
             } else {
               const p1 = userMap[m.player1] || { _id: m.player1, nickName: '未知', avatarUrl: '' };
               const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
+              const winnerId = res && res.winner ? (Array.isArray(res.winner) ? res.winner[0] : res.winner) : null;
               matchups.push({
                 gameIndex,
                 round: r.round,
@@ -218,7 +219,7 @@ exports.main = async (event, context) => {
                 player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
                 team1: null,
                 team2: null,
-                winner: res && res.winner,
+                winner: winnerId,
                 loser: res && res.loser,
                 score1: res && typeof res.score1 === 'number' ? res.score1 : null,
                 score2: res && typeof res.score2 === 'number' ? res.score2 : null
@@ -235,6 +236,7 @@ exports.main = async (event, context) => {
             const p2 = userMap[m.player2] || { _id: m.player2, nickName: '未知', avatarUrl: '' };
             const resultKey = 'g' + g.groupId + '-m' + (mi + 1);
             const res = m.result || results[resultKey];
+            const winnerId = res && res.winner ? (Array.isArray(res.winner) ? res.winner[0] : res.winner) : null;
             matchups.push({
               gameIndex,
               groupId: g.groupId,
@@ -242,7 +244,7 @@ exports.main = async (event, context) => {
               resultKey,
               player1: { _id: p1._id, nickName: p1.nickName || '未知', avatarUrl: p1.avatarUrl || '' },
               player2: { _id: p2._id, nickName: p2.nickName || '未知', avatarUrl: p2.avatarUrl || '' },
-              winner: res && res.winner,
+              winner: winnerId,
               loser: res && res.loser,
               score1: res && typeof res.score1 === 'number' ? res.score1 : null,
               score2: res && typeof res.score2 === 'number' ? res.score2 : null
