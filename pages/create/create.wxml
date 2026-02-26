@@ -36,8 +36,8 @@
           bindinput="onPlayerCountInput"
         />
       </view>
-      <text class="form-hint form-hint-error" wx:if="{{playerCountInvalid}}">小队转时人数须为偶数</text>
-      <text class="form-hint" wx:if="{{subMode === 'team-turn' && maxPlayersPerTeamHint && !playerCountInvalid}}">总人数建议为队伍数的倍数，每队最多 {{maxPlayersPerTeamHint}} 人</text>
+      <text class="form-hint form-hint-error" wx:if="{{playerCountInvalid}}">总人数须能被队伍数整除（每队人数一致）</text>
+      <text class="form-hint" wx:if="{{subMode === 'team-turn' && maxPlayersPerTeamHint && !playerCountInvalid}}">每队 {{maxPlayersPerTeamHint}} 人</text>
     </view>
 
     <block wx:if="{{subMode === 'team-turn'}}">

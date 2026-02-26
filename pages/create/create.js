@@ -52,13 +52,18 @@ Page({
     }
     const playerCount = this.data.playerCount || 8;
     const maxPlayersPerTeamHint = Math.max(1, Math.floor(playerCount / teamCount));
-    this.setData({ teamCount, teamNames, maxPlayersPerTeamHint });
+    const invalid = this.data.subMode === 'team-turn' && (playerCount % teamCount !== 0);
+    this.setData({ teamCount, teamNames, maxPlayersPerTeamHint, playerCountInvalid: !!invalid });
   },
 
   updateMaxPlayersPerTeamHint() {
     if (this.data.subMode !== 'team-turn') return;
     const { playerCount = 8, teamCount = 2 } = this.data;
-    this.setData({ maxPlayersPerTeamHint: Math.max(1, Math.floor(playerCount / teamCount)) });
+    const invalid = this.data.subMode === 'team-turn' && ((parseInt(playerCount, 10) || 8) % teamCount !== 0);
+    this.setData({
+      maxPlayersPerTeamHint: Math.max(1, Math.floor((parseInt(playerCount, 10) || 8) / teamCount)),
+      playerCountInvalid: !!invalid
+    });
   },
 
   onTeamNameInput(e) {
@@ -75,7 +80,8 @@ Page({
 
   onPlayerCountInput(e) {
     const playerCount = parseInt(e.detail.value, 10) || 8;
-    const playerCountInvalid = this.data.subMode === 'team-turn' && (playerCount % 2 !== 0);
+    const teamCount = this.data.teamCount || 2;
+    const playerCountInvalid = this.data.subMode === 'team-turn' && (playerCount % teamCount !== 0);
     this.setData({ playerCount, playerCountInvalid }, () => this.updateMaxPlayersPerTeamHint());
   },
 
@@ -138,8 +144,9 @@ Page({
       wx.showToast({ title: '人数请设为 2-16', icon: 'none' });
       return;
     }
-    if (subMode === 'team-turn' && count % 2 !== 0) {
-      wx.showToast({ title: '小队转时人数须为偶数', icon: 'none' });
+    const tc = parseInt(teamCount, 10) || 2;
+    if (subMode === 'team-turn' && count % tc !== 0) {
+      wx.showToast({ title: '总人数须能被队伍数整除（每队人数一致）', icon: 'none' });
       return;
     }
     if (subMode === 'team-turn' && teamNames && teamCount >= 2) {

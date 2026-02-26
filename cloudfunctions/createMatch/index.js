@@ -16,7 +16,11 @@ exports.main = async (event, context) => {
   if (subMode === 'team-turn' && (!teamCount || teamCount < 2 || teamCount > 4)) {
     return { success: false, message: '小队转模式下队伍数量需为 2、3 或 4' };
   }
-
+  const maxP = parseInt(maxPlayers, 10) || 8;
+  const tc = subMode === 'team-turn' ? Math.min(4, Math.max(2, parseInt(teamCount, 10) || 2)) : 2;
+  if (subMode === 'team-turn' && maxP % tc !== 0) {
+    return { success: false, message: '总人数须能被队伍数整除（每队人数一致）' };
+  }
   try {
     // 查询或创建用户
     let userRes = await db.collection('users').where({ openid }).get();
