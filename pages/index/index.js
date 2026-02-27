@@ -3,7 +3,10 @@ const app = getApp();
 
 Page({
   data: {
-    recentRecords: []
+    recentRecords: [],
+    userNick: '微信用户',
+    userLevelText: '羽球新手 · 轻松开局',
+    loaded: false
   },
 
   onLoad() {},
@@ -13,6 +16,15 @@ Page({
       this.getTabBar().setData({ selected: 0 });
     }
     this.loadRecentRecords();
+
+     // 初始化首頁個人資訊與動畫狀態
+    const userInfo = app.globalData.userInfo || {};
+    const nick = userInfo.nickName || '微信用户';
+    this.setData({
+      userNick: nick,
+      userLevelText: '羽球新手 · 轻松开局',
+      loaded: true
+    });
   },
 
   async loadRecentRecords() {
@@ -97,24 +109,26 @@ Page({
     });
   },
 
+  onAnnouncementTap() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+
   onHeroTap(e) {
     const type = e.currentTarget.dataset.type;
     if (type === 'create') {
-      wx.navigateTo({
-        url: '/pages/singles-mode/singles-mode'
-      });
+      wx.navigateTo({ url: '/pages/singles-mode/singles-mode' });
     } else if (type === 'matches') {
-      wx.switchTab({
-        url: '/pages/matches/matches'
-      });
+      wx.switchTab({ url: '/pages/matches/matches' });
     } else if (type === 'profile') {
-      wx.switchTab({
-        url: '/pages/profile/profile'
-      });
+      wx.switchTab({ url: '/pages/profile/profile' });
     }
   },
 
   onViewAllRecords() {
     wx.navigateTo({ url: '/pages/history/history' });
+  },
+
+  onStartChallenge() {
+    wx.navigateTo({ url: '/pages/singles-mode/singles-mode' });
   }
 });
