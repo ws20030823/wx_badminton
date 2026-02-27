@@ -1,0 +1,37 @@
+<!-- pages/feedback/feedback.wxml - 意见反馈 -->
+<view class="page">
+  <view class="card">
+    <text class="title">反馈内容</text>
+    <textarea
+      class="textarea"
+      placeholder="请描述你遇到的问题、建议或期望的功能～"
+      placeholder-class="placeholder"
+      value="{{content}}"
+      maxlength="500"
+      auto-height="false"
+      bindinput="onContentInput"
+    ></textarea>
+    <text class="hint">最多 500 字</text>
+  </view>
+
+  <view class="card">
+    <text class="title">联系方式（选填）</text>
+    <input
+      class="input"
+      placeholder="可填写微信号、手机号或邮箱，方便我们联系你"
+      placeholder-class="placeholder"
+      value="{{contact}}"
+      bindinput="onContactInput"
+    />
+  </view>
+
+  <view class="actions">
+    <button
+      class="btn-primary"
+      bindtap="onSubmitTap"
+      loading="{{submitting}}"
+      disabled="{{submitting || !canSubmit}}"
+    >提交</button>
+  </view>
+</view>
+

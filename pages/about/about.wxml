@@ -1,0 +1,35 @@
+<!-- pages/about/about.wxml - 关于我们 -->
+<view class="page">
+  <view class="card">
+    <text class="title">羽毛球组队</text>
+    <text class="subtitle">轻松约球 · 智能排赛</text>
+    <text class="desc">
+      本小程序用于帮助羽毛球爱好者快速创建比赛、智能分组和生成对局，让大家少花时间组织，多花时间在场上挥拍。
+    </text>
+  </view>
+
+  <view class="card">
+    <text class="title">主要功能</text>
+    <view class="bullet">
+      <text class="dot">·</text>
+      <text class="text">支持单打 / 双打 / 小队转等多种模式</text>
+    </view>
+    <view class="bullet">
+      <text class="dot">·</text>
+      <text class="text">根据人数自动生成公平合理的对局</text>
+    </view>
+    <view class="bullet">
+      <text class="dot">·</text>
+      <text class="text">记录比赛结果，查看胜率与战绩</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="title">联系我们</text>
+    <text class="desc">
+      如有问题或建议，欢迎通过邮箱联系我们：
+    </text>
+    <text class="email">example@badminton-app.com</text>
+  </view>
+</view>
+

@@ -9,7 +9,10 @@
     "pages/matches/matches",
     "pages/history/history",
     "pages/profile/profile",
-    "pages/user-settings/user-settings"
+    "pages/user-settings/user-settings",
+    "pages/level-detail/level-detail",
+    "pages/feedback/feedback",
+    "pages/about/about"
   ],
   "window": {
     "backgroundTextStyle": "light",

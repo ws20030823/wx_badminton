@@ -97,8 +97,21 @@ Page({
     });
   },
 
-  onAnnouncementTap() {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+  onHeroTap(e) {
+    const type = e.currentTarget.dataset.type;
+    if (type === 'create') {
+      wx.navigateTo({
+        url: '/pages/singles-mode/singles-mode'
+      });
+    } else if (type === 'matches') {
+      wx.switchTab({
+        url: '/pages/matches/matches'
+      });
+    } else if (type === 'profile') {
+      wx.switchTab({
+        url: '/pages/profile/profile'
+      });
+    }
   },
 
   onViewAllRecords() {

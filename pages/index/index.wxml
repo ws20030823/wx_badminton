@@ -6,11 +6,60 @@
     <text class="slogan">挥洒汗水,寻找你的最佳拍档</text>
   </view>
 
-  <!-- 最新公告 -->
-  <view class="announcement-card" bindtap="onAnnouncementTap">
-    <text class="announcement-label">最新公告</text>
-    <text class="announcement-title">本周六俱乐部友谊赛</text>
-    <text class="announcement-hint">点击查看报名详情及分组</text>
+  <!-- 顶部功能轮播 -->
+  <view class="hero-swiper-wrap">
+    <swiper
+      class="hero-swiper"
+      indicator-dots="true"
+      autoplay="true"
+      interval="5000"
+      circular="true"
+    >
+      <!-- 1. 快速创建比赛 -->
+      <swiper-item>
+        <view
+          class="hero-card hero-card-create"
+          bindtap="onHeroTap"
+          data-type="create"
+        >
+          <view class="hero-text">
+            <text class="hero-title">快速创建比赛</text>
+            <text class="hero-sub">设置人数与模式,自动生成公平对局</text>
+          </view>
+          <view class="hero-icon">🏸</view>
+        </view>
+      </swiper-item>
+
+      <!-- 2. 查看我的比赛 -->
+      <swiper-item>
+        <view
+          class="hero-card hero-card-matches"
+          bindtap="onHeroTap"
+          data-type="matches"
+        >
+          <view class="hero-text">
+            <text class="hero-title">查看我的比赛</text>
+            <text class="hero-sub">报名状态与历史战绩一目了然</text>
+          </view>
+          <view class="hero-icon">📋</view>
+        </view>
+      </swiper-item>
+
+      <!-- 3. 完善个人资料 -->
+      <swiper-item>
+        <view
+          class="hero-card hero-card-profile"
+          bindtap="onHeroTap"
+          data-type="profile"
+        >
+          <view class="hero-text">
+            <text class="hero-title">完善个人资料</text>
+            <text class="hero-sub">设置头像与等级,让队友更了解你</text>
+          </view>
+          <view class="hero-icon">😊</view>
+        </view>
+      </swiper-item>
+    </swiper>
   </view>
 
   <!-- 选择比赛模式 -->

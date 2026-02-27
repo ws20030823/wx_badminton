@@ -88,7 +88,10 @@ Page({
   },
 
   onLevelTap() {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+    if (!this.data.userInfo) return;
+    wx.navigateTo({
+      url: '/pages/level-detail/level-detail'
+    });
   },
   onUserInfoTap() {
     if (!this.data.userInfo) return;
@@ -103,13 +106,18 @@ Page({
     wx.switchTab({ url: '/pages/matches/matches' });
   },
   onFeedbackTap() {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+    if (!this.data.userInfo) return;
+    wx.navigateTo({
+      url: '/pages/feedback/feedback'
+    });
   },
   onPrivacyTap() {
     wx.showToast({ title: '功能开发中', icon: 'none' });
   },
   onAboutTap() {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+    wx.navigateTo({
+      url: '/pages/about/about'
+    });
   },
   onLogoutTap() {
     wx.showModal({
