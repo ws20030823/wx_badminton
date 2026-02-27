@@ -74,6 +74,12 @@
 
     <view class="actions">
       <button
+        wx:if="{{match.status === 'registering'}}"
+        class="btn-share"
+        open-type="share"
+      >邀请好友</button>
+
+      <button
         wx:if="{{!hasJoined && match.status === 'registering'}}"
         class="btn-primary"
         bindtap="onJoinTap"

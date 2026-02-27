@@ -187,6 +187,12 @@
   margin-bottom: 0;
 }
 
+.actions .btn-share {
+  background: #fff;
+  color: #1565c0;
+  border: 2rpx solid #1565c0;
+}
+
 .actions .btn-robot {
   background: #fff;
   color: #999;

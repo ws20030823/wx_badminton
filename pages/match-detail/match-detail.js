@@ -34,6 +34,13 @@ Page({
     }
   },
 
+  onShareAppMessage() {
+    const { matchId, match } = this.data;
+    const title = match && match.name ? `${match.name} - 羽毛球组队` : '羽毛球比赛邀请';
+    const path = `/pages/match-detail/match-detail?id=${matchId || ''}`;
+    return { title, path };
+  },
+
   async loadMatch() {
     wx.showLoading({ title: '加载中...' });
 
