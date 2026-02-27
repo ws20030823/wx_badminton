@@ -86,6 +86,12 @@
       >立即报名</button>
 
       <button
+        wx:if="{{hasJoined && match.status === 'registering'}}"
+        class="btn-leave"
+        bindtap="onLeaveTap"
+      >取消报名</button>
+
+      <button
         wx:if="{{isCreator && match.status === 'registering'}}"
         class="btn-robot"
         bindtap="onAddRobotTap"

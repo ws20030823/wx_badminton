@@ -1,0 +1,142 @@
+.page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 24rpx 24rpx 140rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  padding: 24rpx 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.avatar-card {
+  margin-bottom: 24rpx;
+  padding-top: 40rpx;
+  padding-bottom: 40rpx;
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-large {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: #eee;
+  margin-bottom: 16rpx;
+}
+
+.avatar-tip {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.form-card {
+  margin-bottom: 24rpx;
+  padding-top: 40rpx;
+}
+
+.form-item {
+  margin-bottom: 24rpx;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.input {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  padding: 0 24rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #ddd;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.placeholder {
+  color: #bbb;
+}
+
+.error {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #e53935;
+}
+
+.segmented {
+  display: flex;
+  gap: 16rpx;
+}
+
+.segmented-item {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #ddd;
+  color: #666;
+  background: #fafafa;
+}
+
+.segmented-item.active {
+  border-color: #512da8;
+  color: #512da8;
+  background: rgba(81, 45, 168, 0.06);
+}
+
+.level-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 0;
+}
+
+.level-title {
+  font-size: 26rpx;
+}
+
+.level-sub {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16rpx 40rpx 32rpx;
+  background: #fff;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  color: #fff;
+  border: none;
+  background: linear-gradient(135deg, #7c4dff 0%, #512da8 100%);
+}
+
+.btn-primary::after {
+  border: none;
+}
+

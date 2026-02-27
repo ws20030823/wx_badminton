@@ -8,7 +8,8 @@
     "pages/record-score/record-score",
     "pages/matches/matches",
     "pages/history/history",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/user-settings/user-settings"
   ],
   "window": {
     "backgroundTextStyle": "light",

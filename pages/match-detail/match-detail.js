@@ -139,6 +139,29 @@ Page({
     }
   },
 
+  async onLeaveTap() {
+    const { matchId } = this.data;
+    if (!matchId) return;
+    try {
+      wx.showLoading({ title: '处理中...' });
+      const res = await wx.cloud.callFunction({
+        name: 'leaveMatch',
+        data: { matchId }
+      });
+      wx.hideLoading();
+      const result = res.result;
+      if (result && result.success) {
+        wx.showToast({ title: '已取消报名', icon: 'success' });
+        this.loadMatch();
+      } else {
+        wx.showToast({ title: result?.message || '取消报名失败', icon: 'none' });
+      }
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '取消报名失败', icon: 'none' });
+    }
+  },
+
   onSwitchTeamTap() {
     const { teamList, myTeamIndex } = this.data;
     if (!teamList || teamList.length < 2 || myTeamIndex < 0) return;

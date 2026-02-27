@@ -42,6 +42,14 @@
   border: none;
 }
 
+.login-hint {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 12rpx;
+  padding-left: 0;
+}
+
 .user-row {
   display: flex;
   align-items: center;

@@ -1,0 +1,89 @@
+<!-- pages/user-settings/user-settings.wxml - 用户信息详情与编辑 -->
+<view class="page">
+  <view class="card avatar-card">
+    <view class="avatar-wrapper" bindtap="onChooseAvatar">
+      <image
+        class="avatar-large"
+        src="{{avatar || wxAvatarUrl}}"
+        mode="aspectFill"
+      ></image>
+      <text class="avatar-tip">点击修改头像</text>
+    </view>
+  </view>
+
+  <view class="card form-card">
+    <view class="form-item">
+      <text class="label">昵称</text>
+      <input
+        class="input"
+        placeholder="请输入昵称"
+        placeholder-class="placeholder"
+        value="{{nickName}}"
+        maxlength="20"
+        bindinput="onNickNameInput"
+      />
+      <text class="error" wx:if="{{nickNameError}}">昵称最多 20 个字符</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">性别</text>
+      <view class="segmented">
+        <view
+          class="segmented-item {{gender === 'male' ? 'active' : ''}}"
+          data-value="male"
+          bindtap="onGenderTap"
+        >男</view>
+        <view
+          class="segmented-item {{gender === 'female' ? 'active' : ''}}"
+          data-value="female"
+          bindtap="onGenderTap"
+        >女</view>
+        <view
+          class="segmented-item {{gender === 'secret' ? 'active' : ''}}"
+          data-value="secret"
+          bindtap="onGenderTap"
+        >保密</view>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">水平等级</text>
+      <view class="segmented">
+        <view
+          class="segmented-item level-item {{levelTag === 'beginner' ? 'active' : ''}}"
+          data-value="beginner"
+          bindtap="onLevelTap"
+        >
+          <text class="level-title">初学</text>
+          <text class="level-sub">新手上路</text>
+        </view>
+        <view
+          class="segmented-item level-item {{levelTag === 'intermediate' ? 'active' : ''}}"
+          data-value="intermediate"
+          bindtap="onLevelTap"
+        >
+          <text class="level-title">进阶</text>
+          <text class="level-sub">能够对拉</text>
+        </view>
+        <view
+          class="segmented-item level-item {{levelTag === 'advanced' ? 'active' : ''}}"
+          data-value="advanced"
+          bindtap="onLevelTap"
+        >
+          <text class="level-title">高手</text>
+          <text class="level-sub">专业竞技</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button
+      class="btn-primary"
+      bindtap="onSaveTap"
+      loading="{{saving}}"
+      disabled="{{saving || nickNameError}}"
+    >保存</button>
+  </view>
+</view>
+

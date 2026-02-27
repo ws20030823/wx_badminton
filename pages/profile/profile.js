@@ -90,6 +90,12 @@ Page({
   onLevelTap() {
     wx.showToast({ title: '功能开发中', icon: 'none' });
   },
+  onUserInfoTap() {
+    if (!this.data.userInfo) return;
+    wx.navigateTo({
+      url: '/pages/user-settings/user-settings'
+    });
+  },
   onRecordTap() {
     wx.navigateTo({ url: '/pages/history/history' });
   },

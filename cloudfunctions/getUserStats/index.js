@@ -14,7 +14,7 @@ exports.main = async (event, context) => {
   try {
     const userRes = await db.collection('users').where({ openid }).get();
     if (!userRes.data || userRes.data.length === 0) {
-      return { success: true, userId: null, stats: null };
+      return { success: true, userId: null, stats: null, userBase: null };
     }
 
     const user = userRes.data[0];
@@ -29,6 +29,12 @@ exports.main = async (event, context) => {
       stats: {
         ...stats,
         winRate: parseFloat(winRate)
+      },
+      userBase: {
+        nickName: user.nickName || '用户',
+        avatarUrl: user.avatarUrl || '',
+        gender: user.gender || 'secret',
+        levelTag: user.levelTag || 'beginner'
       }
     };
   } catch (err) {

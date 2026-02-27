@@ -193,6 +193,12 @@
   border: 2rpx solid #1565c0;
 }
 
+.actions .btn-leave {
+  background: #fff;
+  color: #999;
+  border: 2rpx solid #ddd;
+}
+
 .actions .btn-robot {
   background: #fff;
   color: #999;
