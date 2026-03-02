@@ -28,7 +28,7 @@
   },
   "appid": "wx379c10ca0cbf9ffe",
   "projectname": "wx-badminton",
-  "libVersion": "3.5.7",
+  "libVersion": "3.14.3",
   "condition": {},
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
@@ -36,5 +36,8 @@
     "ignore": [],
     "include": []
   },
-  "editorSetting": {}
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
 }
